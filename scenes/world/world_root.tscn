@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[node name="WorldRoot" type="Node2D"]
+
+[node name="CellContainer" type="Node2D" parent="."]
+
+[node name="Environment" type="Node2D" parent="."]
+
+[node name="TransitionRoot" type="Node2D" parent="."]

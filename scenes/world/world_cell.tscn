@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[node name="WorldCell" type="Node2D"]
+
+[node name="Terrain" type="Node2D" parent="."]
+
+[node name="Collision" type="Node2D" parent="."]
+
+[node name="Props" type="Node2D" parent="."]
+
+[node name="Actors" type="Node2D" parent="."]
+
+[node name="Interactables" type="Node2D" parent="."]
+
+[node name="SpawnPoints" type="Node2D" parent="."]

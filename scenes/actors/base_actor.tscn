@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/actors/base_actor.gd" id="1_base_actor"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_actor_feet"]
+size = Vector2(14, 10)
+
+[node name="BaseActor" type="CharacterBody2D"]
+script = ExtResource("1_base_actor")
+
+[node name="VisualRoot" type="Node2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VisualRoot"]
+texture_filter = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -5)
+shape = SubResource("RectangleShape2D_actor_feet")
+
+[node name="InteractionAnchor" type="Marker2D" parent="."]
+
+[node name="CameraAnchor" type="Marker2D" parent="."]

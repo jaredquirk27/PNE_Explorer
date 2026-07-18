@@ -1,0 +1,26 @@
+# Godot editor and import cache
+.godot/
+
+# Operating-system metadata
+.DS_Store
+**/.DS_Store
+
+# Logs, temporary files, and runtime captures
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+screenshots/
+
+# Local concept and scale-reference artwork not used at runtime
+assets/concepts/
+assets/worlds/shannara/prototype/
+assets/actors/player/prototype/
+
+# Superseded individual Rue exports; runtime uses rue_idle_8dir.png
+assets/actors/rue/prototype/rue_front*.png*
+assets/actors/rue/prototype/rue_back*.png*
+assets/actors/rue/prototype/rue_left.png*
+assets/actors/rue/prototype/rue_right.png*

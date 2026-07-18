@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/world/world_cell.tscn" id="1_world_cell"]
+[ext_resource type="PackedScene" path="res://scenes/actors/rue_actor.tscn" id="2_player_actor"]
+[ext_resource type="Script" path="res://scripts/controllers/player_controller.gd" id="3_player_controller"]
+[ext_resource type="PackedScene" path="res://scenes/world/prototype_tile_environment.tscn" id="4_tile_environment"]
+
+[node name="TestWorld" type="Node2D"]
+
+[node name="TestCell" parent="." instance=ExtResource("1_world_cell")]
+
+[node name="PrototypeTileEnvironment" parent="TestCell/Terrain" instance=ExtResource("4_tile_environment")]
+
+[node name="PlayerActor" parent="TestCell/Actors" instance=ExtResource("2_player_actor")]
+position = Vector2(272, 208)
+
+[node name="ScaleTestCamera" type="Camera2D" parent="TestCell/Actors/PlayerActor/CameraAnchor"]
+position = Vector2(0, -32)
+
+[node name="PlayerController" type="Node" parent="."]
+script = ExtResource("3_player_controller")
+controlled_actor_path = NodePath("../TestCell/Actors/PlayerActor")

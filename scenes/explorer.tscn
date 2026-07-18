@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[node name="Explorer" type="Node2D"]
+
+[node name="WorldRoot" type="Node2D" parent="."]
+
+[node name="ActorRoot" type="Node2D" parent="."]
+
+[node name="UIRoot" type="CanvasLayer" parent="."]
+
+[node name="Runtime" type="Node" parent="."]
