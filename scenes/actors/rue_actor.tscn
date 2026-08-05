@@ -1,49 +1,27 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/actors/base_actor.tscn" id="1_base_actor"]
-[ext_resource type="Texture2D" path="res://assets/actors/rue/prototype/rue_idle_8dir.png" id="2_rue_idle"]
+[ext_resource type="Script" path="res://scripts/actors/companion_actor.gd" id="2_companion"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="5_interactable"]
 
-[sub_resource type="AtlasTexture" id="Atlas_idle_up"]
-atlas = ExtResource("2_rue_idle")
-region = Rect2(64, 0, 64, 64)
-
-[sub_resource type="AtlasTexture" id="Atlas_idle_left"]
-atlas = ExtResource("2_rue_idle")
-region = Rect2(0, 64, 64, 64)
-
-[sub_resource type="AtlasTexture" id="Atlas_idle_right"]
-atlas = ExtResource("2_rue_idle")
-region = Rect2(128, 64, 64, 64)
-
-[sub_resource type="AtlasTexture" id="Atlas_idle_down"]
-atlas = ExtResource("2_rue_idle")
-region = Rect2(64, 128, 64, 64)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_rue_idle"]
-animations = [{
-"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_down")}],
-"loop": false,
-"name": &"idle_down",
-"speed": 6.0
-}, {
-"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_left")}],
-"loop": false,
-"name": &"idle_left",
-"speed": 6.0
-}, {
-"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_right")}],
-"loop": false,
-"name": &"idle_right",
-"speed": 6.0
-}, {
-"frames": [{"duration": 1.0, "texture": SubResource("Atlas_idle_up")}],
-"loop": false,
-"name": &"idle_up",
-"speed": 6.0
-}]
+[sub_resource type="CircleShape2D" id="CircleShape2D_rue_interaction"]
+radius = 32.0
 
 [node name="RueActor" instance=ExtResource("1_base_actor")]
+script = ExtResource("2_companion")
 actor_id = &"rue"
-sprite_frames = SubResource("SpriteFrames_rue_idle")
+actor_display_name = "Rue"
+idle_texture_path = "res://GameAssets/Characters/Companion/Rue/standard/idle.png"
+walk_texture_path = "res://GameAssets/Characters/Companion/Rue/standard/walk.png"
 sprite_offset = Vector2(0, -32)
-visual_scale = 1
+
+[node name="Interactable" type="Area2D" parent="." index="3"]
+script = ExtResource("5_interactable")
+interaction_id = &"rue_world_chat"
+interaction_type = &"open_companion_chat"
+display_name = "Rue"
+prompt_text = "Talk with Rue"
+companion_id = &"rue"
+
+[node name="InteractionRange" type="CollisionShape2D" parent="Interactable"]
+shape = SubResource("CircleShape2D_rue_interaction")

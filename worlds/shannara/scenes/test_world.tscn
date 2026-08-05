@@ -1,21 +1,76 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/world/world_cell.tscn" id="1_world_cell"]
-[ext_resource type="PackedScene" path="res://scenes/actors/rue_actor.tscn" id="2_player_actor"]
+[ext_resource type="PackedScene" path="res://scenes/actors/player_actor.tscn" id="2_player_actor"]
 [ext_resource type="Script" path="res://scripts/controllers/player_controller.gd" id="3_player_controller"]
-[ext_resource type="PackedScene" path="res://scenes/world/prototype_tile_environment.tscn" id="4_tile_environment"]
+[ext_resource type="PackedScene" path="res://scenes/world/hadeshorn_environment.tscn" id="4_hadeshorn_environment"]
+[ext_resource type="PackedScene" path="res://scenes/actors/rue_actor.tscn" id="6_rue_actor"]
+[ext_resource type="PackedScene" path="res://scenes/actors/cogline_actor.tscn" id="7_cogline_actor"]
+[ext_resource type="PackedScene" path="res://scenes/actors/par_ohmsford_actor.tscn" id="8_par_actor"]
+[ext_resource type="PackedScene" path="res://scenes/actors/coll_ohmsford_actor.tscn" id="9_coll_actor"]
+[ext_resource type="PackedScene" path="res://scenes/actors/morgan_leah_actor.tscn" id="10_morgan_actor"]
+[ext_resource type="PackedScene" path="res://scenes/actors/wren_ohmsford_actor.tscn" id="11_wren_actor"]
+[ext_resource type="PackedScene" path="res://scenes/actors/garth_actor.tscn" id="12_garth_actor"]
+[ext_resource type="PackedScene" path="res://scenes/actors/walker_boh_actor.tscn" id="13_walker_actor"]
+[ext_resource type="Script" path="res://scripts/world/hadeshorn_scene_blocking.gd" id="14_scene_blocking"]
 
 [node name="TestWorld" type="Node2D"]
 
 [node name="TestCell" parent="." instance=ExtResource("1_world_cell")]
 
-[node name="PrototypeTileEnvironment" parent="TestCell/Terrain" instance=ExtResource("4_tile_environment")]
+[node name="HadeshornEnvironment" parent="TestCell/Terrain" instance=ExtResource("4_hadeshorn_environment")]
+scale = Vector2(1.25, 1.25)
 
 [node name="PlayerActor" parent="TestCell/Actors" instance=ExtResource("2_player_actor")]
-position = Vector2(272, 208)
+position = Vector2(360, 428)
+
+[node name="RueActor" parent="TestCell/Actors" instance=ExtResource("6_rue_actor")]
+position = Vector2(310, 443)
+leader_path = NodePath("../PlayerActor")
+
+[node name="CoglineActor" parent="TestCell/Actors" instance=ExtResource("7_cogline_actor")]
+position = Vector2(360, 365)
+
+[node name="ParOhmsfordActor" parent="TestCell/Actors" instance=ExtResource("8_par_actor")]
+position = Vector2(220, 360)
+initial_facing = "right"
+
+[node name="CollOhmsfordActor" parent="TestCell/Actors" instance=ExtResource("9_coll_actor")]
+position = Vector2(285, 360)
+initial_facing = "left"
+
+[node name="MorganLeahActor" parent="TestCell/Actors" instance=ExtResource("10_morgan_actor")]
+position = Vector2(345, 405)
+initial_facing = "left"
+
+[node name="WrenOhmsfordActor" parent="TestCell/Actors" instance=ExtResource("11_wren_actor")]
+position = Vector2(470, 360)
+initial_facing = "right"
+
+[node name="GarthActor" parent="TestCell/Actors" instance=ExtResource("12_garth_actor")]
+position = Vector2(535, 360)
+initial_facing = "left"
+
+[node name="WalkerBohActor" parent="TestCell/Actors" instance=ExtResource("13_walker_actor")]
+position = Vector2(125, 320)
+
+[node name="HadeshornSceneBlocking" type="Node" parent="."]
+script = ExtResource("14_scene_blocking")
+cogline_path = NodePath("../TestCell/Actors/CoglineActor")
+walker_path = NodePath("../TestCell/Actors/WalkerBohActor")
+par_path = NodePath("../TestCell/Actors/ParOhmsfordActor")
+coll_path = NodePath("../TestCell/Actors/CollOhmsfordActor")
+morgan_path = NodePath("../TestCell/Actors/MorganLeahActor")
+wren_path = NodePath("../TestCell/Actors/WrenOhmsfordActor")
+garth_path = NodePath("../TestCell/Actors/GarthActor")
 
 [node name="ScaleTestCamera" type="Camera2D" parent="TestCell/Actors/PlayerActor/CameraAnchor"]
-position = Vector2(0, -32)
+position = Vector2(0, -150)
+zoom = Vector2(0.8, 0.8)
+limit_left = 0
+limit_top = 0
+limit_right = 720
+limit_bottom = 640
 
 [node name="PlayerController" type="Node" parent="."]
 script = ExtResource("3_player_controller")

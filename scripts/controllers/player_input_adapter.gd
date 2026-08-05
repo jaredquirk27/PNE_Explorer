@@ -1,8 +1,11 @@
 extends Node
 
+signal interact_requested
+
 @export var player_controller_path: NodePath
 
 var _player_controller: Node
+var _movement_enabled: bool = true
 
 
 func _ready() -> void:
@@ -29,5 +32,17 @@ func _physics_process(_delta: float) -> void:
 	if _player_controller == null:
 		return
 
-	var direction := Input.get_vector(&"move_left", &"move_right", &"move_up", &"move_down")
+	var direction := Input.get_vector(&"move_left", &"move_right", &"move_up", &"move_down") if _movement_enabled else Vector2.ZERO
 	_player_controller.call(&"set_move_direction", direction)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed(&"interact"):
+		interact_requested.emit()
+		get_viewport().set_input_as_handled()
+
+
+func set_movement_enabled(value: bool) -> void:
+	_movement_enabled = value
+	if not _movement_enabled and _player_controller != null:
+		_player_controller.call(&"set_move_direction", Vector2.ZERO)

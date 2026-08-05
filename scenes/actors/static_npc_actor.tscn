@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/actors/static_npc_actor.gd" id="1_static_npc"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interactable"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_static_npc_feet"]
+size = Vector2(14, 10)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_static_npc_interaction"]
+radius = 30.0
+
+[node name="StaticNPCActor" type="CharacterBody2D"]
+script = ExtResource("1_static_npc")
+
+[node name="VisualRoot" type="Node2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VisualRoot"]
+texture_filter = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -5)
+shape = SubResource("RectangleShape2D_static_npc_feet")
+
+[node name="InteractionAnchor" type="Marker2D" parent="."]
+
+[node name="CameraAnchor" type="Marker2D" parent="."]
+
+[node name="InteractionArea" type="Area2D" parent="."]
+script = ExtResource("2_interactable")
+interaction_type = &"open_companion_chat"
+continued_conversation_available = false
+enabled = true
+
+[node name="InteractionShape" type="CollisionShape2D" parent="InteractionArea"]
+shape = SubResource("CircleShape2D_static_npc_interaction")

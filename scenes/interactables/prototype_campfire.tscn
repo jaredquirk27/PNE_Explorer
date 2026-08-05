@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="1_interactable"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_interaction_range"]
+radius = 48.0
+
+[node name="PrototypeCampfire" type="Node2D"]
+
+[node name="StoneRing" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-12, -2, -8, -8, 8, -8, 12, -2, 8, 4, -8, 4)
+color = Color(0.35, 0.38, 0.42, 1)
+
+[node name="Flame" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-6, -5, 0, -22, 7, -6, 3, 1, -4, 1)
+color = Color(1, 0.45, 0.08, 1)
+
+[node name="Interactable" type="Area2D" parent="."]
+script = ExtResource("1_interactable")
+interaction_id = &"prototype_campfire_rue_chat"
+interaction_type = &"open_companion_chat"
+display_name = "Campfire"
+prompt_text = "Talk with Rue"
+companion_id = &"rue"
+
+[node name="InteractionRange" type="CollisionShape2D" parent="Interactable"]
+shape = SubResource("CircleShape2D_interaction_range")

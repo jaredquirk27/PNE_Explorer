@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/actors/base_actor.tscn" id="1_base_actor"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="3_interactable"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cogline_interaction"]
+radius = 40.0
+
+[node name="CoglineActor" instance=ExtResource("1_base_actor")]
+actor_id = &"cogline"
+actor_display_name = "Cogline"
+idle_texture_path = "res://GameAssets/Characters/NPC/Cogline/standard/idle.png"
+walk_texture_path = "res://GameAssets/Characters/NPC/Cogline/standard/walk.png"
+sprite_offset = Vector2(0, -32)
+initial_facing = "up"
+
+[node name="Interactable" type="Area2D" parent="." index="3"]
+script = ExtResource("3_interactable")
+interaction_id = &"cogline_ritual"
+interaction_type = &"advance_chronicle"
+display_name = "Cogline"
+prompt_text = "Observe Cogline's ritual"
+companion_id = &"cogline"
+chronicle_action = "Observe Cogline and the Hadeshorn ritual."
+continued_conversation_available = false
+conversation_unavailable_message = "Cogline's continued NPC conversation requires backend /chat registration. His story-bearing response is shown above; speaking again will not advance the Chronicle."
+
+[node name="InteractionRange" type="CollisionShape2D" parent="Interactable"]
+shape = SubResource("CircleShape2D_cogline_interaction")

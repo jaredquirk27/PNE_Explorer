@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://ruoauboccgnk"
+
+[deps]
+
+files=["res://GameAssets/Characters/NPC/Wren_Ohmsford/credits/credits.notes.translation", "res://GameAssets/Characters/NPC/Wren_Ohmsford/credits/credits.authors.translation", "res://GameAssets/Characters/NPC/Wren_Ohmsford/credits/credits.licenses.translation", "res://GameAssets/Characters/NPC/Wren_Ohmsford/credits/credits.urls.translation"]
+
+source_file="res://GameAssets/Characters/NPC/Wren_Ohmsford/credits/credits.csv"
+dest_files=["res://GameAssets/Characters/NPC/Wren_Ohmsford/credits/credits.notes.translation", "res://GameAssets/Characters/NPC/Wren_Ohmsford/credits/credits.authors.translation", "res://GameAssets/Characters/NPC/Wren_Ohmsford/credits/credits.licenses.translation", "res://GameAssets/Characters/NPC/Wren_Ohmsford/credits/credits.urls.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

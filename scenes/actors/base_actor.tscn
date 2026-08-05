@@ -9,9 +9,12 @@ size = Vector2(14, 10)
 script = ExtResource("1_base_actor")
 
 [node name="VisualRoot" type="Node2D" parent="."]
+z_index = 10
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VisualRoot"]
 texture_filter = 1
+visible = true
+modulate = Color(1, 1, 1, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -5)

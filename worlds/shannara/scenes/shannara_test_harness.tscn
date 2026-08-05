@@ -1,15 +1,37 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/explorer.tscn" id="1_explorer"]
 [ext_resource type="PackedScene" path="res://worlds/shannara/scenes/test_world.tscn" id="2_test_world"]
 [ext_resource type="Script" path="res://scripts/controllers/player_input_adapter.gd" id="3_input_adapter"]
+[ext_resource type="PackedScene" path="res://scenes/ui/companion_chat_panel.tscn" id="4_chat_panel"]
+[ext_resource type="Script" path="res://scripts/interaction/interaction_controller.gd" id="5_interaction_controller"]
+[ext_resource type="Script" path="res://scripts/api/chronicle_runtime_client.gd" id="6_chronicle_client"]
 
-[node name="ShannaraTestHarness" type="Node2D"]
+[node name="Explorer" instance=ExtResource("1_explorer")]
 
-[node name="Explorer" parent="." instance=ExtResource("1_explorer")]
+[node name="TestWorld" parent="WorldRoot" instance=ExtResource("2_test_world")]
 
-[node name="TestWorld" parent="Explorer/WorldRoot" instance=ExtResource("2_test_world")]
+[node name="InteractionPrompt" type="Label" parent="UIRoot"]
+offset_left = 188.0
+offset_top = 286.0
+offset_right = 388.0
+offset_bottom = 314.0
+text = "[E] Interact"
+horizontal_alignment = 1
 
-[node name="PlayerInputAdapter" type="Node" parent="."]
+[node name="ChatPanel" parent="UIRoot" instance=ExtResource("4_chat_panel")]
+
+[node name="PlayerInputAdapter" type="Node" parent="Runtime"]
 script = ExtResource("3_input_adapter")
-player_controller_path = NodePath("../Explorer/WorldRoot/TestWorld/PlayerController")
+player_controller_path = NodePath("../../WorldRoot/TestWorld/PlayerController")
+
+[node name="ChronicleRuntimeClient" type="Node" parent="Runtime"]
+script = ExtResource("6_chronicle_client")
+
+[node name="InteractionController" type="Node" parent="Runtime"]
+script = ExtResource("5_interaction_controller")
+player_path = NodePath("../../WorldRoot/TestWorld/TestCell/Actors/PlayerActor")
+input_adapter_path = NodePath("../PlayerInputAdapter")
+prompt_path = NodePath("../../UIRoot/InteractionPrompt")
+chat_panel_path = NodePath("../../UIRoot/ChatPanel")
+chronicle_client_path = NodePath("../ChronicleRuntimeClient")

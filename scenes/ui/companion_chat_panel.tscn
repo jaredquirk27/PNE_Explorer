@@ -1,0 +1,68 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/api/companion_chat_panel.gd" id="1_chat_panel"]
+
+[node name="ChatPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_chat_panel")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 38.0
+offset_right = 504.0
+offset_bottom = 286.0
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Panel/Margin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Panel/Margin/VBox"]
+layout_mode = 2
+text = "Companion"
+
+[node name="History" type="RichTextLabel" parent="Panel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+scroll_active = true
+
+[node name="Composer" type="HBoxContainer" parent="Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="MessageInput" type="LineEdit" parent="Panel/Margin/VBox/Composer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Message Rue..."
+
+[node name="SendButton" type="Button" parent="Panel/Margin/VBox/Composer"]
+layout_mode = 2
+text = "Send"
+
+[node name="CloseButton" type="Button" parent="Panel/Margin/VBox"]
+layout_mode = 2
+text = "Close"
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+timeout = 90.0
+
+[node name="HealthRequest" type="HTTPRequest" parent="."]
+timeout = 5.0

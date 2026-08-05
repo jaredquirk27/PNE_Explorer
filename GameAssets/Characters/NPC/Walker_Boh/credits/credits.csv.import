@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://0f8gmffvbvl6"
+
+[deps]
+
+files=["res://GameAssets/Characters/NPC/Walker_Boh/credits/credits.notes.translation", "res://GameAssets/Characters/NPC/Walker_Boh/credits/credits.authors.translation", "res://GameAssets/Characters/NPC/Walker_Boh/credits/credits.licenses.translation", "res://GameAssets/Characters/NPC/Walker_Boh/credits/credits.urls.translation"]
+
+source_file="res://GameAssets/Characters/NPC/Walker_Boh/credits/credits.csv"
+dest_files=["res://GameAssets/Characters/NPC/Walker_Boh/credits/credits.notes.translation", "res://GameAssets/Characters/NPC/Walker_Boh/credits/credits.authors.translation", "res://GameAssets/Characters/NPC/Walker_Boh/credits/credits.licenses.translation", "res://GameAssets/Characters/NPC/Walker_Boh/credits/credits.urls.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

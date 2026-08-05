@@ -1,0 +1,930 @@
+{
+  "version": 2,
+  "bodyType": "male",
+  "selections": {
+    "body": {
+      "itemId": "body",
+      "subId": null,
+      "variant": "",
+      "recolor": "light",
+      "name": "Body Color (light)"
+    },
+    "head": {
+      "itemId": "heads_human_male",
+      "subId": null,
+      "variant": "",
+      "recolor": "light",
+      "name": "Human Male (light)"
+    },
+    "expression": {
+      "itemId": "face_neutral",
+      "subId": null,
+      "variant": "",
+      "recolor": "light",
+      "name": "Neutral (light)"
+    },
+    "shoes": {
+      "itemId": "feet_boots_basic",
+      "subId": null,
+      "variant": "",
+      "recolor": "walnut",
+      "name": "Basic Boots (walnut)"
+    },
+    "shadow": {
+      "itemId": "shadow",
+      "subId": null,
+      "variant": "",
+      "recolor": "black",
+      "name": "Shadow (black)"
+    },
+    "beard": {
+      "itemId": "beards_beard",
+      "subId": null,
+      "variant": "",
+      "recolor": "dark_brown",
+      "name": "Basic Beard (dark_brown)"
+    },
+    "mustache": {
+      "itemId": "beards_chevron",
+      "subId": null,
+      "variant": "",
+      "recolor": "chestnut",
+      "name": "Chevron Mustache (chestnut)"
+    },
+    "hair": {
+      "itemId": "hair_messy2",
+      "subId": null,
+      "variant": "",
+      "recolor": "chestnut",
+      "name": "Messy2 (chestnut)"
+    },
+    "hat": {
+      "itemId": "hat_hood_cloth",
+      "subId": null,
+      "variant": "",
+      "recolor": "green",
+      "name": "Hood (green)"
+    },
+    "bracers": {
+      "itemId": "arms_bracers",
+      "subId": null,
+      "variant": "",
+      "recolor": "iron",
+      "name": "Bracers (iron)"
+    },
+    "clothes": {
+      "itemId": "torso_clothes_shortsleeve",
+      "subId": null,
+      "variant": "",
+      "recolor": "green",
+      "name": "Shortsleeve (green)"
+    },
+    "armour": {
+      "itemId": "torso_armour_leather",
+      "subId": null,
+      "variant": "",
+      "recolor": "green",
+      "name": "Leather (green)"
+    },
+    "belt": {
+      "itemId": "belt_leather",
+      "subId": null,
+      "variant": "tan",
+      "recolor": "",
+      "name": "Leather Belt (tan)"
+    },
+    "legs": {
+      "itemId": "legs_pants2",
+      "subId": null,
+      "variant": "",
+      "recolor": "green",
+      "name": "Long Pants (green)"
+    },
+    "weapon": {
+      "itemId": "weapon_sword_dagger",
+      "subId": null,
+      "variant": "dagger",
+      "recolor": "",
+      "name": "Dagger (dagger)"
+    },
+    "eyes": {
+      "itemId": "heads_human_male",
+      "subId": 1,
+      "variant": "",
+      "recolor": "green",
+      "name": "Eye Color (green)"
+    }
+  },
+  "selectedAnimation": "walk",
+  "showTransparencyGrid": true,
+  "applyTransparencyMask": false,
+  "matchBodyColorEnabled": true,
+  "compactDisplay": false,
+  "enabledLicenses": {
+    "CC0": true,
+    "CC-BY-SA": true,
+    "CC-BY": true,
+    "OGA-BY": true,
+    "GPL": true
+  },
+  "enabledAnimations": {
+    "spellcast": false,
+    "thrust": false,
+    "walk": false,
+    "slash": false,
+    "shoot": false,
+    "hurt": false,
+    "climb": false,
+    "idle": false,
+    "jump": false,
+    "sit": false,
+    "emote": false,
+    "run": false,
+    "watering": false,
+    "combat": false,
+    "1h_slash": false,
+    "1h_backslash": false,
+    "1h_halfslash": false
+  },
+  "url": "http://localhost:5173/#sex=male&body=Body_Color_light&head=Human_Male_light&expression=Neutral_light&shoes=Basic_Boots_walnut&shadow=Shadow_black&beard=Basic_Beard_dark_brown&mustache=Chevron_Mustache_chestnut&hair=Messy2_chestnut&hat=Hood_green&bracers=Bracers_iron&clothes=Shortsleeve_green&armour=Leather_green&belt=Leather_Belt_tan&legs=Long_Pants_green&weapon=Dagger_dagger&eyes=Eye_Color_green",
+  "layers": [
+    {
+      "itemId": "shadow",
+      "name": "Shadow (black)",
+      "variant": "",
+      "recolors": {
+        "shadow": "black"
+      },
+      "zPos": 0,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "shadow/adult/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "weapon_sword_dagger",
+      "name": "Dagger (dagger)",
+      "variant": "dagger",
+      "recolors": null,
+      "zPos": 9,
+      "layerNum": 2,
+      "yPos": 256,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "weapon/sword/dagger/behind/thrust/dagger.png"
+      },
+      "supportedAnimations": [
+        "thrust",
+        "walk",
+        "slash",
+        "hurt"
+      ]
+    },
+    {
+      "itemId": "body",
+      "name": "Body Color (light)",
+      "variant": "",
+      "recolors": {
+        "body": "light"
+      },
+      "zPos": 10,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "body/bodies/male/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "legs_pants2",
+      "name": "Long Pants (green)",
+      "variant": "",
+      "recolors": {
+        "legs": "green"
+      },
+      "zPos": 20,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "legs/pants2/male/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "feet_boots_basic",
+      "name": "Basic Boots (walnut)",
+      "variant": "",
+      "recolors": {
+        "shoes": "walnut"
+      },
+      "zPos": 25,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "feet/boots/basic/male/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "torso_clothes_shortsleeve",
+      "name": "Shortsleeve (green)",
+      "variant": "",
+      "recolors": {
+        "clothes": "green"
+      },
+      "zPos": 35,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "torso/clothes/shortsleeve/shortsleeve/male/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "torso_armour_leather",
+      "name": "Leather (green)",
+      "variant": "",
+      "recolors": {
+        "armour": "green"
+      },
+      "zPos": 60,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "torso/armour/leather/male/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run"
+      ]
+    },
+    {
+      "itemId": "arms_bracers",
+      "name": "Bracers (iron)",
+      "variant": "",
+      "recolors": {
+        "bracers": "iron"
+      },
+      "zPos": 70,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "arms/bracers/male/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run"
+      ]
+    },
+    {
+      "itemId": "belt_leather",
+      "name": "Leather Belt (tan)",
+      "variant": "tan",
+      "recolors": null,
+      "zPos": 70,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "torso/waist/belt_leather/male/spellcast/tan.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt"
+      ]
+    },
+    {
+      "itemId": "heads_human_male",
+      "name": "Human Male (light)",
+      "variant": "",
+      "recolors": {
+        "head": "light",
+        "eyes": "green"
+      },
+      "zPos": 100,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "head/heads/human/male/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "face_neutral",
+      "name": "Neutral (light)",
+      "variant": "",
+      "recolors": {
+        "expression": "light",
+        "eyes": "green"
+      },
+      "zPos": 101,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "head/faces/male/neutral/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "beards_beard",
+      "name": "Basic Beard (dark_brown)",
+      "variant": "",
+      "recolors": {
+        "beard": "dark_brown"
+      },
+      "zPos": 110,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "beards/beard/basic/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "beards_chevron",
+      "name": "Chevron Mustache (chestnut)",
+      "variant": "",
+      "recolors": {
+        "mustache": "chestnut"
+      },
+      "zPos": 111,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "beards/mustache/chevron/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "hair_messy2",
+      "name": "Messy2 (chestnut)",
+      "variant": "",
+      "recolors": {
+        "hair": "chestnut"
+      },
+      "zPos": 120,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "hair/messy2/adult/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "hat_hood_cloth",
+      "name": "Hood (green)",
+      "variant": "",
+      "recolors": {
+        "hat": "green"
+      },
+      "zPos": 130,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "hat/cloth/hood/adult/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "weapon_sword_dagger",
+      "name": "Dagger (dagger)",
+      "variant": "dagger",
+      "recolors": null,
+      "zPos": 140,
+      "layerNum": 1,
+      "yPos": 256,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "weapon/sword/dagger/thrust/dagger.png"
+      },
+      "supportedAnimations": [
+        "thrust",
+        "walk",
+        "slash",
+        "hurt"
+      ]
+    }
+  ],
+  "credits": [
+    {
+      "fileName": "body/bodies/male/walk.png",
+      "file": "body/bodies/male",
+      "notes": "see details at https://opengameart.org/content/lpc-character-bases; 'Thick' Male Revised Run/Climb by JaidynReiman (based on ElizaWy's LPC Revised)",
+      "authors": [
+        "bluecarrot16",
+        "JaidynReiman",
+        "Benjamin K. Smith (BenCreating)",
+        "Evert",
+        "Eliza Wyatt (ElizaWy)",
+        "TheraHedwig",
+        "MuffinElZangano",
+        "Durrani",
+        "Johannes Sjölund (wulax)",
+        "Stephen Challener (Redshrike)"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+        "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+        "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani",
+        "https://opengameart.org/content/lpc-runcycle-and-diagonal-walkcycle",
+        "https://opengameart.org/content/lpc-revised-character-basics",
+        "https://opengameart.org/content/lpc-be-seated",
+        "https://opengameart.org/content/lpc-runcycle-for-male-muscular-and-pregnant-character-bases-with-modular-heads",
+        "https://opengameart.org/content/lpc-jump-expanded",
+        "https://opengameart.org/content/lpc-character-bases"
+      ]
+    },
+    {
+      "fileName": "head/heads/human/male/walk.png",
+      "file": "head/heads/human/male",
+      "notes": "original head by Redshrike, tweaks by BenCreating, modular version by bluecarrot16",
+      "authors": [
+        "bluecarrot16",
+        "Benjamin K. Smith (BenCreating)",
+        "Stephen Challener (Redshrike)"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+        "https://opengameart.org/content/lpc-character-bases"
+      ]
+    },
+    {
+      "fileName": "head/faces/male/neutral/walk.png",
+      "file": "head/faces",
+      "notes": "Original by Redshrike, Expressions by ElizaWy, mapped to all frames by JaidynReiman",
+      "authors": [
+        "JaidynReiman",
+        "ElizaWy",
+        "Stephen Challener (Redshrike)"
+      ],
+      "licenses": [
+        "OGA-BY 3.0"
+      ],
+      "urls": [
+        "https://github.com/ElizaWy/LPC/tree/main/Characters/Head",
+        "https://opengameart.org/content/ulpc-expanded-expressions"
+      ]
+    },
+    {
+      "fileName": "feet/boots/basic/male/walk.png",
+      "file": "feet/boots/basic",
+      "notes": "original by Nila122, edited for male and v3 bases by bluecarrot16, Jump/Sit/Emote/Run/Revised Combat by JaidynReiman",
+      "authors": [
+        "JaidynReiman",
+        "bluecarrot16",
+        "Nila122"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 2.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-clothes-and-hair",
+        "https://opengameart.org/content/lpc-expanded-socks-shoes"
+      ]
+    },
+    {
+      "fileName": "shadow/adult/walk.png",
+      "file": "shadow",
+      "notes": "Original by Dr. Jamgo, jump/sit/emote/run/revised combat by JaidynReiman",
+      "authors": [
+        "drjamgo@hotmail.com",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "CC0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/shadow-for-lpc-sprite"
+      ]
+    },
+    {
+      "fileName": "beards/beard/basic/walk.png",
+      "file": "beards/beard/basic",
+      "notes": "Original by Nemisys, repositioning by JaidynReiman.",
+      "authors": [
+        "JaidynReiman",
+        "Carlo Enrico Victoria (Nemisys)"
+      ],
+      "licenses": [
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-white-beard"
+      ]
+    },
+    {
+      "fileName": "beards/mustache/chevron/walk.png",
+      "file": "beards/mustache/chevron",
+      "notes": "",
+      "authors": [
+        "ElizaWy"
+      ],
+      "licenses": [
+        "OGA-BY 3.0"
+      ],
+      "urls": [
+        "https://github.com/ElizaWy/LPC/tree/main/Characters/Hair",
+        "https://opengameart.org/content/lpc-expanded-sit-run-jump-more"
+      ]
+    },
+    {
+      "fileName": "hair/messy2/adult/walk.png",
+      "file": "hair/messy2",
+      "notes": "",
+      "authors": [
+        "JaidynReiman",
+        "Manuel Riecke (MrBeast)"
+      ],
+      "licenses": [
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+        "https://opengameart.org/content/lpc-expanded-hair"
+      ]
+    },
+    {
+      "fileName": "hat/cloth/hood/adult/walk.png",
+      "file": "hat/cloth/hood",
+      "notes": "Brown hood by Wulax, original black/white recolors by ??, mapped to idle/run/jump/revised combat by JaidynReiman, along with additional recolors.",
+      "authors": [
+        "Johannes Sjölund (wulax)",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+        "https://opengameart.org/content/lpc-expanded-hats-facial-helmets"
+      ]
+    },
+    {
+      "fileName": "arms/bracers/male/walk.png",
+      "file": "arms/bracers",
+      "notes": "original by wulax, adjustments by Makrohn, climb/emote/jump/sit/run by JaidynReiman",
+      "authors": [
+        "Matthew Krohn (makrohn)",
+        "Johannes Sjölund (wulax)",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites"
+      ]
+    },
+    {
+      "fileName": "torso/clothes/shortsleeve/shortsleeve/male/walk.png",
+      "file": "torso/clothes/shortsleeve/shortsleeve/male",
+      "notes": "original by ElizaWy walkcycle only; extended to all animations by adapting from longsleeve, edited to v3 bases by bluecarrot16; cleanup and climb/jump/run/sit/emote/revised combat adapted from LPC Revised by JaidynReiman",
+      "authors": [
+        "bluecarrot16",
+        "ElizaWy",
+        "JaidynReiman",
+        "Stephen Challener (Redshrike)"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+        "http://opengameart.org/content/lpc-revised-character-basics",
+        "http://opengameart.org/content/lpc-clothing-updates",
+        "https://github.com/ElizaWy/LPC/tree/main/Characters/Clothing",
+        "https://opengameart.org/content/lpc-expanded-sit-run-jump-more",
+        "https://opengameart.org/content/lpc-expanded-simple-shirts"
+      ]
+    },
+    {
+      "fileName": "torso/armour/leather/male/walk.png",
+      "file": "torso/armour/leather",
+      "notes": "adapted to v3 bases by bluecarrot16, reduced colors and climb/emote/jump by JaidynReiman",
+      "authors": [
+        "Johannes Sjölund (wulax)",
+        "bluecarrot16",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+        "https://opengameart.org/content/lpc-clothing-updates",
+        "https://opengameart.org/content/lpc-expanded-armor"
+      ]
+    },
+    {
+      "fileName": "torso/waist/belt_leather/male/walk/tan.png",
+      "file": "torso/waist/belt_leather",
+      "notes": "",
+      "authors": [
+        "bluecarrot16",
+        "Johannes Sjölund (wulax)",
+        "Matthew Krohn (makrohn)"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-combat-armor-for-women",
+        "https://opengameart.org/content/lpc-pirates"
+      ]
+    },
+    {
+      "fileName": "legs/pants2/male/walk.png",
+      "file": "legs/pants2/male",
+      "notes": "original overalls by ElizaWy, base animations adapted from v3 overalls by bluecarrot16, pants by JaidynReiman",
+      "authors": [
+        "JaidynReiman",
+        "ElizaWy",
+        "Bluecarrot16",
+        "Johannes Sjölund (wulax)",
+        "Stephen Challener (Redshrike)"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://github.com/ElizaWy/LPC/tree/main/Characters/Clothing",
+        "https://opengameart.org/content/lpc-expanded-sit-run-jump-more",
+        "https://opengameart.org/content/lpc-expanded-pants"
+      ]
+    },
+    {
+      "fileName": "weapon/sword/dagger/walk/dagger.png",
+      "file": "weapon/sword/dagger",
+      "notes": "",
+      "authors": [
+        "bluecarrot16",
+        "Johannes Sjölund (wulax)",
+        "Matthew Krohn (makrohn)"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+        "https://opengameart.org/content/lpc-extended-weapon-animations"
+      ]
+    }
+  ]
+}

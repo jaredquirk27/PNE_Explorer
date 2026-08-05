@@ -1,0 +1,166 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/hadeshorn_environment.gd" id="1_controller"]
+[ext_resource type="Texture2D" path="res://GameAssets/Scenes/Hadeshorn/Terrain/walkable_shale.png" id="2_terrain"]
+[ext_resource type="Texture2D" path="res://GameAssets/Scenes/Hadeshorn/Water/hadeshorn_lake_idle.png" id="3_idle"]
+[ext_resource type="Texture2D" path="res://GameAssets/Scenes/Hadeshorn/Water/hadeshorn_lake_ritual_01.png" id="4_ritual_01"]
+[ext_resource type="Texture2D" path="res://GameAssets/Scenes/Hadeshorn/Water/hadeshorn_lake_ritual_02.png" id="5_ritual_02"]
+[ext_resource type="Texture2D" path="res://GameAssets/Scenes/Hadeshorn/Water/hadeshorn_lake_ritual_03.png" id="6_ritual_03"]
+[ext_resource type="Texture2D" path="res://GameAssets/Scenes/Hadeshorn/Terrain/foreground_cliffs.png" id="7_foreground_cliffs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_horizontal"]
+size = Vector2(576, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_vertical"]
+size = Vector2(16, 440)
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_hadeshorn"]
+vertices = PackedVector2Array(24, 272, 552, 272, 552, 496, 24, 496)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+
+[node name="HadeshornEnvironment" type="Node2D"]
+script = ExtResource("1_controller")
+
+[node name="Background" type="Node2D" parent="."]
+z_index = -110
+
+[node name="BackdropFill" type="Polygon2D" parent="Background"]
+polygon = PackedVector2Array(-200, -200, 900, -200, 900, 700, -200, 700)
+color = Color(0.055, 0.06, 0.065, 1)
+
+[node name="DragonsTeeth" type="Sprite2D" parent="Background"]
+texture_filter = 2
+position = Vector2(-112, -140)
+scale = Vector2(0.52, 0.52)
+texture = ExtResource("7_foreground_cliffs")
+centered = false
+
+[node name="ForegroundCliffs" type="Sprite2D" parent="Background"]
+texture_filter = 2
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("7_foreground_cliffs")
+centered = false
+
+[node name="ExtendedTerrain" type="Node2D" parent="."]
+z_index = -100
+
+[node name="ShaleBeyond" type="Sprite2D" parent="ExtendedTerrain"]
+texture_filter = 2
+position = Vector2(-112, 80)
+scale = Vector2(0.52, 0.52)
+texture = ExtResource("2_terrain")
+centered = false
+
+[node name="Terrain" type="Node2D" parent="."]
+z_index = -90
+
+[node name="WalkableShale" type="Sprite2D" parent="Terrain"]
+texture_filter = 2
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("2_terrain")
+centered = false
+
+[node name="Water" type="Node2D" parent="."]
+z_index = -80
+
+[node name="Idle" type="Sprite2D" parent="Water"]
+texture_filter = 2
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("3_idle")
+centered = false
+
+[node name="Ritual01" type="Sprite2D" parent="Water"]
+texture_filter = 2
+visible = false
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("4_ritual_01")
+centered = false
+
+[node name="Ritual02" type="Sprite2D" parent="Water"]
+texture_filter = 2
+visible = false
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("5_ritual_02")
+centered = false
+
+[node name="Ritual03" type="Sprite2D" parent="Water"]
+texture_filter = 2
+visible = false
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("6_ritual_03")
+centered = false
+
+[node name="Navigation" type="Node2D" parent="."]
+
+[node name="WalkableShelf" type="NavigationRegion2D" parent="Navigation"]
+enabled = false
+navigation_polygon = SubResource("NavigationPolygon_hadeshorn")
+
+[node name="SouthPathEntrance" type="Marker2D" parent="Navigation"]
+position = Vector2(288, 490)
+
+[node name="Collision" type="Node2D" parent="."]
+
+[node name="LakeBoundary" type="StaticBody2D" parent="Collision"]
+
+[node name="Shoreline" type="CollisionPolygon2D" parent="Collision/LakeBoundary"]
+polygon = PackedVector2Array(66, 88, 114, 67, 205, 57, 291, 60, 381, 57, 477, 72, 526, 104, 547, 151, 531, 197, 488, 233, 426, 256, 348, 268, 264, 270, 185, 263, 120, 245, 73, 213, 45, 169, 46, 124)
+
+[node name="OuterTerrainEdges" type="StaticBody2D" parent="Collision"]
+
+[node name="TopEdge" type="CollisionShape2D" parent="Collision/OuterTerrainEdges"]
+position = Vector2(288, 56)
+shape = SubResource("RectangleShape_horizontal")
+
+[node name="BottomEdge" type="CollisionShape2D" parent="Collision/OuterTerrainEdges"]
+position = Vector2(288, 504)
+shape = SubResource("RectangleShape_horizontal")
+
+[node name="LeftEdge" type="CollisionShape2D" parent="Collision/OuterTerrainEdges"]
+position = Vector2(8, 280)
+shape = SubResource("RectangleShape_vertical")
+
+[node name="RightEdge" type="CollisionShape2D" parent="Collision/OuterTerrainEdges"]
+position = Vector2(568, 280)
+shape = SubResource("RectangleShape_vertical")
+
+[node name="ActorMarkers" type="Node2D" parent="."]
+
+[node name="PlayerEntry" type="Marker2D" parent="ActorMarkers"]
+position = Vector2(288, 342)
+
+[node name="RueEntry" type="Marker2D" parent="ActorMarkers"]
+position = Vector2(248, 354)
+
+[node name="CoglineRitualPosition" type="Marker2D" parent="ActorMarkers"]
+position = Vector2(288, 292)
+
+[node name="WalkerPosition" type="Marker2D" parent="ActorMarkers"]
+position = Vector2(100, 256)
+
+[node name="ParPosition" type="Marker2D" parent="ActorMarkers"]
+position = Vector2(176, 288)
+
+[node name="CollPosition" type="Marker2D" parent="ActorMarkers"]
+position = Vector2(228, 288)
+
+[node name="MorganPosition" type="Marker2D" parent="ActorMarkers"]
+position = Vector2(276, 324)
+
+[node name="WrenPosition" type="Marker2D" parent="ActorMarkers"]
+position = Vector2(376, 288)
+
+[node name="GarthPosition" type="Marker2D" parent="ActorMarkers"]
+position = Vector2(428, 288)
+
+[node name="RumorPosition" type="Marker2D" parent="ActorMarkers"]
+position = Vector2(500, 282)
+
+[node name="InteractionMarkers" type="Node2D" parent="."]
+
+[node name="CoglineApproach" type="Marker2D" parent="InteractionMarkers"]
+position = Vector2(288, 326)
+
+[node name="FX" type="Node2D" parent="."]
+
+[node name="EnvironmentStateController" type="Node" parent="."]

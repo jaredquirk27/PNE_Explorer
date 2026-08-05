@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/actors/base_actor.tscn" id="1_base_actor"]
+[ext_resource type="PackedScene" path="res://scenes/interactables/npc_interactable.tscn" id="2_interactable"]
+
+[node name="WalkerBohActor" instance=ExtResource("1_base_actor")]
+actor_id = &"walker_boh"
+actor_display_name = "Walker Boh"
+idle_texture_path = "res://GameAssets/Characters/NPC/Walker_Boh/standard/idle.png"
+walk_texture_path = "res://GameAssets/Characters/NPC/Walker_Boh/standard/walk.png"
+sprite_offset = Vector2(0, -32)
+initial_facing = "up"
+
+[node name="Interactable" parent="." index="3" instance=ExtResource("2_interactable")]
+interaction_id = &"walker_boh_chat"
+display_name = "Walker Boh"
+prompt_text = "Talk with Walker"
+companion_id = &"walker_boh"

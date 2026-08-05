@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://bgnm6sbr5g1oe"
+
+[deps]
+
+files=["res://GameAssets/Characters/Player/Male_Base/credits/credits.notes.translation", "res://GameAssets/Characters/Player/Male_Base/credits/credits.authors.translation", "res://GameAssets/Characters/Player/Male_Base/credits/credits.licenses.translation", "res://GameAssets/Characters/Player/Male_Base/credits/credits.urls.translation"]
+
+source_file="res://GameAssets/Characters/Player/Male_Base/credits/credits.csv"
+dest_files=["res://GameAssets/Characters/Player/Male_Base/credits/credits.notes.translation", "res://GameAssets/Characters/Player/Male_Base/credits/credits.authors.translation", "res://GameAssets/Characters/Player/Male_Base/credits/credits.licenses.translation", "res://GameAssets/Characters/Player/Male_Base/credits/credits.urls.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

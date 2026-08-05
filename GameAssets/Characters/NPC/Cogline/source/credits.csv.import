@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://d33tx3g36722f"
+
+[deps]
+
+files=["res://GameAssets/Characters/NPC/Cogline/source/credits.notes.translation", "res://GameAssets/Characters/NPC/Cogline/source/credits.authors.translation", "res://GameAssets/Characters/NPC/Cogline/source/credits.licenses.translation", "res://GameAssets/Characters/NPC/Cogline/source/credits.urls.translation"]
+
+source_file="res://GameAssets/Characters/NPC/Cogline/source/credits.csv"
+dest_files=["res://GameAssets/Characters/NPC/Cogline/source/credits.notes.translation", "res://GameAssets/Characters/NPC/Cogline/source/credits.authors.translation", "res://GameAssets/Characters/NPC/Cogline/source/credits.licenses.translation", "res://GameAssets/Characters/NPC/Cogline/source/credits.urls.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

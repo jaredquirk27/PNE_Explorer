@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="NPCActivityDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/actors/npc_activity_definition.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+activity_id = &"arm_cross"
+start_idle_texture_path = "res://assets/actors/Astrid/standard/astrid_front_left_idle.png"
+start_hold_duration = 0.4
+trigger_min_seconds = 12.0
+trigger_max_seconds = 25.0
+hold_frame_texture_path = "res://assets/actors/Astrid/activities/arm_cross/forward/12.png"
+hold_duration = 5.0
+forward_fps = 6.0
+backward_fps = 6.0
+end_idle_texture_path = "res://assets/actors/Astrid/standard/astrid_front_right_idle.png"
+end_idle_hold_duration = 5.0
+post_activity_cooldown_min = 12.0
+post_activity_cooldown_max = 25.0
+retrigger_min = 12.0
+retrigger_max = 25.0
+interrupt_policy = "finish"
+start_facing = "south_west"
+end_facing = "south_east"
+forward_frames = Array[String](["res://assets/actors/Astrid/activities/arm_cross/forward/00.png", "res://assets/actors/Astrid/activities/arm_cross/forward/01.png", "res://assets/actors/Astrid/activities/arm_cross/forward/02.png", "res://assets/actors/Astrid/activities/arm_cross/forward/03.png", "res://assets/actors/Astrid/activities/arm_cross/forward/04.png", "res://assets/actors/Astrid/activities/arm_cross/forward/05.png", "res://assets/actors/Astrid/activities/arm_cross/forward/06.png", "res://assets/actors/Astrid/activities/arm_cross/forward/07.png", "res://assets/actors/Astrid/activities/arm_cross/forward/08.png", "res://assets/actors/Astrid/activities/arm_cross/forward/09.png", "res://assets/actors/Astrid/activities/arm_cross/forward/10.png", "res://assets/actors/Astrid/activities/arm_cross/forward/11.png", "res://assets/actors/Astrid/activities/arm_cross/forward/12.png"])
+backward_frames = Array[String](["res://assets/actors/Astrid/activities/arm_cross/backward/00.png", "res://assets/actors/Astrid/activities/arm_cross/backward/01.png", "res://assets/actors/Astrid/activities/arm_cross/backward/02.png", "res://assets/actors/Astrid/activities/arm_cross/backward/03.png", "res://assets/actors/Astrid/activities/arm_cross/backward/04.png", "res://assets/actors/Astrid/activities/arm_cross/backward/05.png", "res://assets/actors/Astrid/activities/arm_cross/backward/06.png", "res://assets/actors/Astrid/activities/arm_cross/backward/07.png", "res://assets/actors/Astrid/activities/arm_cross/backward/08.png", "res://assets/actors/Astrid/activities/arm_cross/backward/09.png"])

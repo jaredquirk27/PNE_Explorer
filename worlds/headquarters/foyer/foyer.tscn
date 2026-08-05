@@ -1,0 +1,424 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/explorer.tscn" id="1_explorer"]
+[ext_resource type="PackedScene" path="res://scenes/actors/player_actor.tscn" id="2_player_actor"]
+[ext_resource type="PackedScene" path="res://scenes/actors/static_npc_actor.tscn" id="3_static_npc"]
+[ext_resource type="Script" path="res://scripts/controllers/player_controller.gd" id="4_player_controller"]
+[ext_resource type="PackedScene" path="res://scenes/ui/companion_chat_panel.tscn" id="5_chat_panel"]
+[ext_resource type="Script" path="res://scripts/controllers/player_input_adapter.gd" id="6_input_adapter"]
+[ext_resource type="Script" path="res://scripts/api/chronicle_runtime_client.gd" id="7_chronicle_client"]
+[ext_resource type="Script" path="res://scripts/interaction/interaction_controller.gd" id="8_interaction_controller"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="9_interactable"]
+[ext_resource type="Texture2D" path="res://worlds/headquarters/foyer/headquarters_foyer.png" id="10_foyer_bg"]
+[ext_resource type="Resource" path="res://assets/actors/Astrid/activities/arm_cross/arm_cross_activity.tres" id="11_astrid_arm_cross"]
+[ext_resource type="Resource" path="res://assets/actors/Kayla/activities/painting/painting_activity.tres" id="12_kayla_painting"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall"]
+size = Vector2(576, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_side_wall"]
+size = Vector2(16, 384)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bottom_wall"]
+size = Vector2(168, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_terminal"]
+size = Vector2(110, 72)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mural"]
+size = Vector2(168, 72)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_couch"]
+size = Vector2(140, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_interaction"]
+size = Vector2(48, 48)
+
+[node name="Explorer" instance=ExtResource("1_explorer")]
+
+[node name="FoyerWorld" type="Node2D" parent="WorldRoot"]
+
+[node name="Background" type="Node2D" parent="WorldRoot/FoyerWorld"]
+z_index = -50
+
+[node name="FoyerBackdrop" type="Sprite2D" parent="WorldRoot/FoyerWorld/Background"]
+texture_filter = 2
+texture = ExtResource("10_foyer_bg")
+centered = false
+scale = Vector2(0.375, 0.375)
+
+[node name="Collision" type="Node2D" parent="WorldRoot/FoyerWorld"]
+
+[node name="OuterWalls" type="StaticBody2D" parent="WorldRoot/FoyerWorld/Collision"]
+
+[node name="TopWall" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/OuterWalls"]
+position = Vector2(288, 8)
+shape = SubResource("RectangleShape2D_top_wall")
+
+[node name="LeftWall" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/OuterWalls"]
+position = Vector2(8, 192)
+shape = SubResource("RectangleShape2D_side_wall")
+
+[node name="RightWall" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/OuterWalls"]
+position = Vector2(568, 192)
+shape = SubResource("RectangleShape2D_side_wall")
+
+[node name="LowerLeftWall" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/OuterWalls"]
+position = Vector2(110, 376)
+shape = SubResource("RectangleShape2D_bottom_wall")
+
+[node name="LowerRightWall" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/OuterWalls"]
+position = Vector2(466, 376)
+shape = SubResource("RectangleShape2D_bottom_wall")
+
+[node name="FrontDoorFrame" type="StaticBody2D" parent="WorldRoot/FoyerWorld/Collision"]
+
+[node name="FrontDoorFrameShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/FrontDoorFrame"]
+position = Vector2(288, 74)
+shape = SubResource("RectangleShape2D_terminal")
+
+[node name="MissionTerminalBlock" type="StaticBody2D" parent="WorldRoot/FoyerWorld/Collision"]
+
+[node name="MissionTerminalShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/MissionTerminalBlock"]
+position = Vector2(180, 116)
+shape = SubResource("RectangleShape2D_terminal")
+
+[node name="MuralWorkbenchBlock" type="StaticBody2D" parent="WorldRoot/FoyerWorld/Collision"]
+
+[node name="MuralWorkbenchShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/MuralWorkbenchBlock"]
+position = Vector2(448, 132)
+shape = SubResource("RectangleShape2D_mural")
+
+[node name="LeftCouchBlock" type="StaticBody2D" parent="WorldRoot/FoyerWorld/Collision"]
+
+[node name="LeftCouchShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/LeftCouchBlock"]
+position = Vector2(92, 286)
+shape = SubResource("RectangleShape2D_couch")
+
+[node name="RightCouchBlock" type="StaticBody2D" parent="WorldRoot/FoyerWorld/Collision"]
+
+[node name="RightCouchShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/RightCouchBlock"]
+position = Vector2(470, 286)
+shape = SubResource("RectangleShape2D_couch")
+
+[node name="LeftPlantBlock" type="StaticBody2D" parent="WorldRoot/FoyerWorld/Collision"]
+
+[node name="LeftPlantShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/LeftPlantBlock"]
+position = Vector2(34, 196)
+shape = SubResource("RectangleShape2D_couch")
+
+[node name="RightPlantBlock" type="StaticBody2D" parent="WorldRoot/FoyerWorld/Collision"]
+
+[node name="RightPlantShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/RightPlantBlock"]
+position = Vector2(542, 248)
+shape = SubResource("RectangleShape2D_couch")
+
+[node name="Actors" type="Node2D" parent="WorldRoot/FoyerWorld"]
+
+[node name="PlayerActor" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("2_player_actor")]
+position = Vector2(288, 252)
+visual_scale = 0.36
+
+[node name="Astrid" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(338, 164)
+actor_id = &"astrid"
+actor_display_name = "Astrid"
+sprite_texture_path = "res://assets/actors/Astrid/standard/astrid_front_idle.png"
+south_texture_path = "res://assets/actors/Astrid/standard/astrid_front_idle.png"
+south_west_texture_path = "res://assets/actors/Astrid/standard/astrid_front_left_idle.png"
+west_texture_path = "res://assets/actors/Astrid/standard/astrid_right_idle.png"
+north_west_texture_path = "res://assets/actors/Astrid/standard/astrid_back_right_idle.png"
+north_texture_path = "res://assets/actors/Astrid/standard/astrid_back_idle.png"
+north_east_texture_path = "res://assets/actors/Astrid/standard/astrid_back_left_idle.png"
+east_texture_path = "res://assets/actors/Astrid/standard/astrid_left_idle.png"
+south_east_texture_path = "res://assets/actors/Astrid/standard/astrid_front_right_idle.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.4
+ambient_motion_enabled = true
+roam_radius = 14.0
+ambient_move_speed = 16.0
+interaction_prompt = "Talk to Astrid"
+interaction_action = "talk_astrid"
+activity_definitions = [ExtResource("11_astrid_arm_cross")]
+
+[node name="Ben" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(176, 132)
+actor_id = &"ben"
+actor_display_name = "Ben"
+sprite_texture_path = "res://assets/actors/Ben/standard/ben_front_idle.png"
+south_texture_path = "res://assets/actors/Ben/standard/ben_front_idle.png"
+south_west_texture_path = "res://assets/actors/Ben/standard/ben_front_left_idle.png"
+west_texture_path = "res://assets/actors/Ben/standard/ben_left_idle.png"
+north_west_texture_path = "res://assets/actors/Ben/standard/ben_back_left_idle.png"
+north_texture_path = "res://assets/actors/Ben/standard/ben_back_idle.png"
+north_east_texture_path = "res://assets/actors/Ben/standard/ben_back_right_idle.png"
+east_texture_path = "res://assets/actors/Ben/standard/ben_right_idle.png"
+south_east_texture_path = "res://assets/actors/Ben/standard/ben_front_right_idle.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.4
+ambient_motion_enabled = true
+roam_radius = 12.0
+ambient_move_speed = 14.0
+interaction_prompt = "Talk to Ben"
+interaction_action = "talk_ben"
+
+[node name="Erika" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(108, 246)
+actor_id = &"erika"
+actor_display_name = "Erika"
+sprite_texture_path = "res://assets/actors/Erika/standard/erika_front_idle.png"
+south_texture_path = "res://assets/actors/Erika/standard/erika_front_idle.png"
+south_west_texture_path = "res://assets/actors/Erika/standard/erika_front_left_idle.png"
+west_texture_path = "res://assets/actors/Erika/standard/erika_right_idle.png"
+north_west_texture_path = "res://assets/actors/Erika/standard/erika_back_right_idle.png"
+north_texture_path = "res://assets/actors/Erika/standard/erika_back_idle.png"
+north_east_texture_path = "res://assets/actors/Erika/standard/erika_back_left_idle.png"
+east_texture_path = "res://assets/actors/Erika/standard/erika_left_idle.png"
+south_east_texture_path = "res://assets/actors/Erika/standard/erika_front_left_idle.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.4
+ambient_motion_enabled = true
+roam_radius = 12.0
+ambient_move_speed = 14.0
+interaction_prompt = "Talk to Erika"
+interaction_action = "talk_erika"
+
+[node name="Kayla" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(448, 132)
+actor_id = &"kayla"
+actor_display_name = "Kayla"
+sprite_texture_path = "res://assets/actors/Kayla/standard/kayla_front_idle.png"
+south_texture_path = "res://assets/actors/Kayla/standard/kayla_front_idle.png"
+south_west_texture_path = "res://assets/actors/Kayla/standard/kayla_front_left.png"
+west_texture_path = "res://assets/actors/Kayla/standard/kayla_left.png"
+north_west_texture_path = "res://assets/actors/Kayla/standard/kayla_back_left.png"
+north_texture_path = "res://assets/actors/Kayla/standard/kayla_back.png"
+north_east_texture_path = "res://assets/actors/Kayla/standard/kayla_back_right.png"
+east_texture_path = "res://assets/actors/Kayla/standard/kayla_right.png"
+south_east_texture_path = "res://assets/actors/Kayla/standard/kayla_right_front.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.36
+ambient_motion_enabled = false
+interaction_prompt = "Talk to Kayla"
+interaction_action = "talk_kayla"
+activity_definitions = [ExtResource("12_kayla_painting")]
+
+[node name="Sundrop" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(402, 308)
+actor_id = &"sundrop"
+actor_display_name = "Sundrop"
+sprite_texture_path = "res://assets/actors/Sundrop/standard/sundrop_front_idle.png"
+south_texture_path = "res://assets/actors/Sundrop/standard/sundrop_front_idle.png"
+south_west_texture_path = "res://assets/actors/Sundrop/standard/sundrop_front_left_idle.png"
+west_texture_path = "res://assets/actors/Sundrop/standard/sundrop_left_idle.png"
+north_west_texture_path = "res://assets/actors/Sundrop/standard/sundrop_back_left_idle.png"
+north_texture_path = "res://assets/actors/Sundrop/standard/sundrop_back_idle.png"
+north_east_texture_path = "res://assets/actors/Sundrop/standard/sundrop_back_right_idle.png"
+east_texture_path = "res://assets/actors/Sundrop/standard/sundrop_right_idle.png"
+south_east_texture_path = "res://assets/actors/Sundrop/standard/sundrop_front_right_idle.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.4
+ambient_motion_enabled = true
+roam_radius = 16.0
+ambient_move_speed = 18.0
+interaction_prompt = "Talk to Sundrop"
+interaction_action = "talk_sundrop"
+
+[node name="Tali" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(422, 180)
+actor_id = &"tali"
+actor_display_name = "Tali Viskyn"
+sprite_texture_path = "res://assets/actors/Tali/standard/tali_front_idle.png"
+south_texture_path = "res://assets/actors/Tali/standard/tali_front_idle.png"
+south_west_texture_path = "res://assets/actors/Tali/standard/tali_front_left_idle.png"
+west_texture_path = "res://assets/actors/Tali/standard/tali_left_idle.png"
+north_west_texture_path = "res://assets/actors/Tali/standard/tali_back_left_idle.png"
+north_texture_path = "res://assets/actors/Tali/standard/tali_back_idle.png"
+north_east_texture_path = "res://assets/actors/Tali/standard/tali_back_right_idle.png"
+east_texture_path = "res://assets/actors/Tali/standard/tali_right_idle.png"
+south_east_texture_path = "res://assets/actors/Tali/standard/tali_front_right_idle.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.4
+visible = true
+modulate = Color(1, 1, 1, 1)
+z_index = 5
+ambient_motion_enabled = false
+interaction_prompt = "Talk to Tali"
+interaction_action = "talk_tali"
+
+[node name="CameraAnchor" type="Camera2D" parent="WorldRoot/FoyerWorld/Actors/PlayerActor/CameraAnchor"]
+position = Vector2(0, -128)
+zoom = Vector2(1.2, 1.2)
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
+limit_left = 0
+limit_top = 0
+limit_right = 576
+limit_bottom = 384
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.18
+drag_top_margin = 0.2
+drag_right_margin = 0.22
+drag_bottom_margin = 0.18
+
+[node name="InteractionAreas" type="Node2D" parent="WorldRoot/FoyerWorld"]
+
+[node name="FrontDoorInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
+script = ExtResource("9_interactable")
+interaction_id = &"foyer_front_door"
+interaction_type = &"advance_chronicle"
+display_name = "Front Door"
+prompt_text = "Inspect the front door"
+chronicle_action = "Inspect the Night Division foyer front door."
+continued_conversation_available = false
+
+[node name="FrontDoorShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/FrontDoorInteractable"]
+position = Vector2(288, 112)
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="MissionTerminalInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
+script = ExtResource("9_interactable")
+interaction_id = &"foyer_mission_terminal"
+interaction_type = &"advance_chronicle"
+display_name = "Mission Terminal"
+prompt_text = "Check the mission terminal"
+chronicle_action = "Inspect the Night Division mission terminal."
+continued_conversation_available = false
+
+[node name="MissionTerminalShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/MissionTerminalInteractable"]
+position = Vector2(180, 116)
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="MuralInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
+script = ExtResource("9_interactable")
+interaction_id = &"foyer_mural"
+interaction_type = &"advance_chronicle"
+display_name = "Mural"
+prompt_text = "Study the mural"
+chronicle_action = "Study the foyer mural and bench display."
+continued_conversation_available = false
+
+[node name="MuralShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/MuralInteractable"]
+position = Vector2(448, 132)
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="StudyPassageInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
+script = ExtResource("9_interactable")
+interaction_id = &"foyer_study_passage"
+interaction_type = &"advance_chronicle"
+display_name = "The Study"
+prompt_text = "Use the passage to The Study"
+chronicle_action = "Approach the passage to The Study."
+continued_conversation_available = false
+
+[node name="StudyPassageShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/StudyPassageInteractable"]
+position = Vector2(112, 334)
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="CommonWingInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
+script = ExtResource("9_interactable")
+interaction_id = &"foyer_common_wing"
+interaction_type = &"advance_chronicle"
+display_name = "Common Wing"
+prompt_text = "Use the passage to Common Wing"
+chronicle_action = "Approach the passage to Common Wing."
+continued_conversation_available = false
+
+[node name="CommonWingShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/CommonWingInteractable"]
+position = Vector2(464, 334)
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="AstridInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
+script = ExtResource("9_interactable")
+interaction_id = &"astrid_talk"
+interaction_type = &"open_companion_chat"
+display_name = "Astrid"
+prompt_text = "Talk to Astrid"
+companion_id = &"astrid"
+chronicle_action = "talk_astrid"
+continued_conversation_available = false
+
+[node name="AstridShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/AstridInteractable"]
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="BenInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
+script = ExtResource("9_interactable")
+interaction_id = &"ben_talk"
+interaction_type = &"open_companion_chat"
+display_name = "Ben"
+prompt_text = "Talk to Ben"
+companion_id = &"ben"
+chronicle_action = "talk_ben"
+continued_conversation_available = false
+
+[node name="BenShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/BenInteractable"]
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="ErikaInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
+script = ExtResource("9_interactable")
+interaction_id = &"erika_talk"
+interaction_type = &"open_companion_chat"
+display_name = "Erika"
+prompt_text = "Talk to Erika"
+companion_id = &"erika"
+chronicle_action = "talk_erika"
+continued_conversation_available = false
+
+[node name="ErikaShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/ErikaInteractable"]
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="KaylaInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
+script = ExtResource("9_interactable")
+interaction_id = &"kayla_talk"
+interaction_type = &"open_companion_chat"
+display_name = "Kayla"
+prompt_text = "Talk to Kayla"
+companion_id = &"kayla"
+chronicle_action = "talk_kayla"
+continued_conversation_available = false
+
+[node name="KaylaShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/KaylaInteractable"]
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="SundropInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
+script = ExtResource("9_interactable")
+interaction_id = &"sundrop_talk"
+interaction_type = &"open_companion_chat"
+display_name = "Sundrop"
+prompt_text = "Talk to Sundrop"
+companion_id = &"sundrop"
+chronicle_action = "talk_sundrop"
+continued_conversation_available = false
+
+[node name="SundropShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/SundropInteractable"]
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="InteractionPrompt" type="Label" parent="UIRoot"]
+offset_left = 188.0
+offset_top = 286.0
+offset_right = 388.0
+offset_bottom = 314.0
+text = "[E] Interact"
+horizontal_alignment = 1
+
+[node name="ChatPanel" parent="UIRoot" instance=ExtResource("5_chat_panel")]
+
+[node name="PlayerController" type="Node" parent="Runtime"]
+script = ExtResource("4_player_controller")
+controlled_actor_path = NodePath("../../WorldRoot/FoyerWorld/Actors/PlayerActor")
+
+[node name="PlayerInputAdapter" type="Node" parent="Runtime"]
+script = ExtResource("6_input_adapter")
+player_controller_path = NodePath("../PlayerController")
+
+[node name="ChronicleRuntimeClient" type="Node" parent="Runtime"]
+script = ExtResource("7_chronicle_client")
+
+[node name="InteractionController" type="Node" parent="Runtime"]
+script = ExtResource("8_interaction_controller")
+player_path = NodePath("../../WorldRoot/FoyerWorld/Actors/PlayerActor")
+input_adapter_path = NodePath("../PlayerInputAdapter")
+prompt_path = NodePath("../../UIRoot/InteractionPrompt")
+chat_panel_path = NodePath("../../UIRoot/ChatPanel")
+chronicle_client_path = NodePath("../ChronicleRuntimeClient")

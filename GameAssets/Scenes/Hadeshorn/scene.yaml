@@ -1,0 +1,94 @@
+
+scene_id: ACT01_CH01_SC01
+chronicle_id: chronicle_0001
+
+name: Hadeshorn
+world: Shannara
+location: The Heartland
+
+description: >
+  The Hadeshorn is the sacred poisoned lake where the shades of dead Druids
+  may be summoned. Cogline performs the ancient rite while the gathered
+  travelers await the manifestation of Allanon.
+
+environment:
+  atmosphere:
+    - ancient
+    - mysterious
+    - uneasy
+    - reverent
+    - expectant
+
+assets:
+  background:
+    - dragons_teeth_mountain.png
+
+  terrain:
+    - walkable_shale.png
+
+  water:
+    idle: hadeshorn_lake_idle.png
+    ritual:
+      - hadeshorn_lake_ritual_01.png
+      - hadeshorn_lake_ritual_02.png
+      - hadeshorn_lake_ritual_03.png
+
+  props:
+    ritual: []
+    rocks: []
+    standing_stones: []
+    trees: []
+
+  fx: []
+
+characters:
+  - cogline
+  - walker
+  - par
+  - coll
+  - morgan
+  - wren
+  - garth
+  - rumor
+  - rue
+  - player
+
+spawn_points:
+  player:
+    id: player_entry
+    facing: north
+
+  rue:
+    follows: player
+
+  cogline:
+    state: conducting_ritual
+    interactable: true
+    facing: south
+
+objectives:
+  primary:
+    - Witness the summoning.
+
+  secondary:
+    - Observe the gathering.
+    - Speak with Rue.
+
+  optional:
+    - Speak with the gathered companions.
+    - Observe the Hadeshorn.
+
+story:
+  allanon_manifested: false
+  ritual_state: dormant
+
+navigation:
+  player_can_enter_water: false
+  companion_follow_enabled: true
+
+notes:
+  - No healthy vegetation.
+  - Ground consists of shale and volcanic rock.
+  - Poisonous water blocks traversal.
+  - Cogline remains focused on the ritual.
+  - Allanon has not yet manifested.
