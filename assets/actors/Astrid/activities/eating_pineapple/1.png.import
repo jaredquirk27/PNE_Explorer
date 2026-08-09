@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cull83cb0xyn8"
-path="res://.godot/imported/headquarters_foyer.png-347aa6af3901a508293921e4537cce4e.ctex"
+uid="uid://hy4oe1wugwp4"
+path="res://.godot/imported/1.png-b4be1fbf5546e98148de2fac3535f834.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://worlds/headquarters/foyer/headquarters_foyer.png"
-dest_files=["res://.godot/imported/headquarters_foyer.png-347aa6af3901a508293921e4537cce4e.ctex"]
+source_file="res://assets/actors/Astrid/activities/eating_pineapple/1.png"
+dest_files=["res://.godot/imported/1.png-b4be1fbf5546e98148de2fac3535f834.ctex"]
 
 [params]
 

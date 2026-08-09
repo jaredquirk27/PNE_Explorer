@@ -3,7 +3,9 @@ extends Node
 signal action_completed(response: Dictionary)
 signal action_failed(message: String)
 
-@export var campaign_endpoint: String = "http://127.0.0.1:8000/campaign/action"
+const PNEBackend = preload("res://scripts/api/pne_backend.gd")
+
+@export var campaign_endpoint: String = ""
 @export var chronicle_id: String = "chronicle_0001"
 
 var _session: Dictionary = {
@@ -19,6 +21,8 @@ var _known_scene_title: String = ""
 
 
 func _ready() -> void:
+	if campaign_endpoint.strip_edges().is_empty():
+		campaign_endpoint = PNEBackend.campaign_action_url()
 	_http_request = HTTPRequest.new()
 	_http_request.timeout = 90.0
 	add_child(_http_request)

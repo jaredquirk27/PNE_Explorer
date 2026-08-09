@@ -38,8 +38,10 @@ func _physics_process(_delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"interact"):
+		var viewport: Viewport = get_viewport()
+		if viewport != null:
+			viewport.set_input_as_handled()
 		interact_requested.emit()
-		get_viewport().set_input_as_handled()
 
 
 func set_movement_enabled(value: bool) -> void:

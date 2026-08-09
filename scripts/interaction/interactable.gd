@@ -13,6 +13,10 @@ signal interaction_cancelled(interaction_id: StringName)
 @export_multiline var chronicle_action: String = ""
 @export var continued_conversation_available: bool = true
 @export_multiline var conversation_unavailable_message: String = ""
+@export var conversation_config: Dictionary = {}
+@export_file("*.tscn") var destination_scene_path: String = ""
+@export var destination_spawn_id: StringName = &"default"
+@export_enum("south", "south_west", "west", "north_west", "north", "north_east", "east", "south_east") var destination_facing: String = "south"
 @export var enabled: bool = true
 
 var _actor_in_range: CharacterBody2D
@@ -35,7 +39,7 @@ func cancel() -> void:
 
 
 func get_interaction_request() -> Dictionary:
-	return {
+	var request: Dictionary = {
 		"actor_path": get_parent().get_path(),
 		"interaction_id": interaction_id,
 		"interaction_type": interaction_type,
@@ -45,7 +49,16 @@ func get_interaction_request() -> Dictionary:
 		"chronicle_action": chronicle_action,
 		"continued_conversation_available": continued_conversation_available,
 		"conversation_unavailable_message": conversation_unavailable_message,
+		"destination_scene_path": destination_scene_path,
+		"destination_spawn_id": destination_spawn_id,
+		"destination_facing": destination_facing,
 	}
+	if not conversation_config.is_empty():
+		request["conversation_config"] = conversation_config.duplicate(true)
+		request["actor_id"] = StringName(conversation_config.get("actor_id", companion_id))
+		request["interaction_action"] = String(conversation_config.get("interaction_action", chronicle_action))
+		request["location_id"] = String(conversation_config.get("location_id", ""))
+	return request
 
 
 func set_interaction_enabled(value: bool) -> void:

@@ -1,0 +1,291 @@
+[gd_scene load_steps=22 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/explorer.tscn" id="1_explorer"]
+[ext_resource type="PackedScene" path="res://scenes/actors/player_actor.tscn" id="2_player_actor"]
+[ext_resource type="PackedScene" path="res://scenes/actors/static_npc_actor.tscn" id="3_static_npc"]
+[ext_resource type="Script" path="res://scripts/controllers/player_controller.gd" id="4_player_controller"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_screen.tscn" id="5_chat_panel"]
+[ext_resource type="Script" path="res://scripts/controllers/player_input_adapter.gd" id="6_input_adapter"]
+[ext_resource type="Script" path="res://scripts/api/chronicle_runtime_client.gd" id="7_chronicle_client"]
+[ext_resource type="Script" path="res://scripts/interaction/interaction_controller.gd" id="8_interaction_controller"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="9_interactable"]
+[ext_resource type="Texture2D" path="res://worlds/headquarters/med_bay/headquarters_med_bay.png" id="10_med_bay_bg"]
+[ext_resource type="Script" path="res://scripts/world/headquarters_room.gd" id="11_headquarters_room"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_horizontal_wall"]
+size = Vector2(576, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vertical_wall"]
+size = Vector2(16, 132)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_top_equipment"]
+size = Vector2(300, 54)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tube"]
+size = Vector2(66, 96)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bed"]
+size = Vector2(92, 110)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_curtains"]
+size = Vector2(132, 52)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_workstation"]
+size = Vector2(136, 58)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_couch"]
+size = Vector2(100, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_shelves"]
+size = Vector2(44, 112)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_interaction"]
+size = Vector2(44, 56)
+
+[node name="Explorer" instance=ExtResource("1_explorer")]
+
+[node name="MedBayWorld" type="Node2D" parent="WorldRoot"]
+script = ExtResource("11_headquarters_room")
+room_id = &"headquarters_med_bay"
+room_display_name = "Night Division Med Bay"
+player_path = NodePath("Actors/PlayerActor")
+spawn_points_path = NodePath("SpawnPoints")
+default_spawn_id = &"from_foyer"
+default_facing = "east"
+
+[node name="Background" type="Node2D" parent="WorldRoot/MedBayWorld"]
+z_index = -50
+
+[node name="MedBayBackdrop" type="Sprite2D" parent="WorldRoot/MedBayWorld/Background"]
+texture_filter = 2
+texture = ExtResource("10_med_bay_bg")
+centered = false
+scale = Vector2(0.375, 0.375)
+
+[node name="Collision" type="Node2D" parent="WorldRoot/MedBayWorld"]
+
+[node name="OuterWalls" type="StaticBody2D" parent="WorldRoot/MedBayWorld/Collision"]
+
+[node name="TopWall" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/Collision/OuterWalls"]
+position = Vector2(288, 8)
+shape = SubResource("RectangleShape2D_horizontal_wall")
+
+[node name="BottomWall" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/Collision/OuterWalls"]
+position = Vector2(288, 376)
+shape = SubResource("RectangleShape2D_horizontal_wall")
+
+[node name="RightWall" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/Collision/OuterWalls"]
+position = Vector2(568, 192)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_horizontal_wall")
+
+[node name="LeftUpperWall" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/Collision/OuterWalls"]
+position = Vector2(8, 66)
+shape = SubResource("RectangleShape2D_vertical_wall")
+
+[node name="LeftLowerWall" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/Collision/OuterWalls"]
+position = Vector2(8, 318)
+shape = SubResource("RectangleShape2D_vertical_wall")
+
+[node name="EquipmentBlocks" type="StaticBody2D" parent="WorldRoot/MedBayWorld/Collision"]
+
+[node name="TopEquipment" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/Collision/EquipmentBlocks"]
+position = Vector2(268, 72)
+shape = SubResource("RectangleShape2D_top_equipment")
+
+[node name="DiagnosticTube" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/Collision/EquipmentBlocks"]
+position = Vector2(88, 88)
+shape = SubResource("RectangleShape2D_tube")
+
+[node name="TreatmentBed" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/Collision/EquipmentBlocks"]
+position = Vector2(454, 112)
+shape = SubResource("RectangleShape2D_bed")
+
+[node name="PrivacyCurtains" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/Collision/EquipmentBlocks"]
+position = Vector2(454, 205)
+shape = SubResource("RectangleShape2D_curtains")
+
+[node name="CentralWorkbench" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/Collision/EquipmentBlocks"]
+position = Vector2(292, 282)
+shape = SubResource("RectangleShape2D_workstation")
+
+[node name="WaitingCouch" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/Collision/EquipmentBlocks"]
+position = Vector2(108, 310)
+shape = SubResource("RectangleShape2D_couch")
+
+[node name="RightShelves" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/Collision/EquipmentBlocks"]
+position = Vector2(526, 286)
+shape = SubResource("RectangleShape2D_shelves")
+
+[node name="SpawnPoints" type="Node2D" parent="WorldRoot/MedBayWorld"]
+
+[node name="from_foyer" type="Marker2D" parent="WorldRoot/MedBayWorld/SpawnPoints"]
+position = Vector2(58, 190)
+
+[node name="Actors" type="Node2D" parent="WorldRoot/MedBayWorld"]
+
+[node name="PlayerActor" parent="WorldRoot/MedBayWorld/Actors" instance=ExtResource("2_player_actor")]
+position = Vector2(58, 190)
+visual_scale = 0.36
+
+[node name="Liara" parent="WorldRoot/MedBayWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(380, 150)
+actor_id = &"liara_cheng"
+actor_display_name = "Dr. Liara Cheng"
+sprite_texture_path = "res://assets/actors/Liara/standard/liara_front_idle.png"
+south_texture_path = "res://assets/actors/Liara/standard/liara_front_idle.png"
+south_west_texture_path = "res://assets/actors/Liara/standard/liara_front_left_idle.png"
+west_texture_path = "res://assets/actors/Liara/standard/liara_left_idle.png"
+north_west_texture_path = "res://assets/actors/Liara/standard/liara_back_left_idle.png"
+north_texture_path = "res://assets/actors/Liara/standard/liara_back_idle.png"
+north_east_texture_path = "res://assets/actors/Liara/standard/liara_back_right_idle.png"
+east_texture_path = "res://assets/actors/Liara/standard/liara_right_idle.png"
+south_east_texture_path = "res://assets/actors/Liara/standard/liara_front_right_idle.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.4
+home_room = &"headquarters_med_bay"
+current_room = &"headquarters_med_bay"
+allowed_rooms = PackedStringArray("headquarters_med_bay")
+ambient_motion_enabled = true
+roam_radius = 8.0
+ambient_move_speed = 12.0
+interaction_prompt = "Talk to Liara"
+interaction_action = "talk_liara_cheng"
+can_follow = false
+dialogue_role = "Night Division Founder"
+dialogue_faction = "Night Division"
+dialogue_portrait_root = "res://assets/actors/Liara/portrait/"
+dialogue_neutral_portrait_path = "res://assets/actors/Liara/portrait/liara_neutral.png"
+dialogue_accent_theme = "teal"
+dialogue_opening_line = "What can I help you with?"
+dialogue_suggestion_labels = PackedStringArray("How is the Med Bay running?", "Is there anything I should know?", "Do you need assistance?", "I’ll let you work.")
+dialogue_suggestion_lines = PackedStringArray("How is the Med Bay running?", "Is there anything I should know?", "Do you need assistance?", "I’ll let you work.")
+
+[node name="Adrian" parent="WorldRoot/MedBayWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(270, 214)
+actor_id = &"adrian_serrin"
+actor_display_name = "Adrian Serrin"
+sprite_texture_path = "res://assets/actors/Adrian/standard/adrian_front_idle.png"
+south_texture_path = "res://assets/actors/Adrian/standard/adrian_front_idle.png"
+south_west_texture_path = "res://assets/actors/Adrian/standard/adrian_front_left_idle.png"
+west_texture_path = "res://assets/actors/Adrian/standard/adrian_left_idle.png"
+north_west_texture_path = "res://assets/actors/Adrian/standard/adrian_back_left_idle.png"
+north_texture_path = "res://assets/actors/Adrian/standard/adrian_back_idle.png"
+north_east_texture_path = "res://assets/actors/Adrian/standard/adrian_back_right_idle.png"
+east_texture_path = "res://assets/actors/Adrian/standard/adrian_right_idle.png"
+south_east_texture_path = "res://assets/actors/Adrian/standard/adrian_front_right_idle.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.4
+home_room = &"headquarters_med_bay"
+current_room = &"headquarters_med_bay"
+allowed_rooms = PackedStringArray("headquarters_med_bay")
+ambient_motion_enabled = true
+roam_radius = 14.0
+ambient_move_speed = 14.0
+interaction_prompt = "Talk to Adrian"
+interaction_action = "talk_adrian_serrin"
+can_follow = false
+dialogue_role = "Night Division Founder"
+dialogue_faction = "Night Division"
+dialogue_portrait_root = "res://assets/actors/Adrian/portrait/"
+dialogue_neutral_portrait_path = "res://assets/actors/Adrian/portrait/adrian_neutral.png"
+dialogue_accent_theme = "navy"
+dialogue_opening_line = "What do you need?"
+dialogue_suggestion_labels = PackedStringArray("How are you doing?", "What brings you to the Med Bay?", "Anything I should know?", "I’ll see you later.")
+dialogue_suggestion_lines = PackedStringArray("How are you doing?", "What brings you to the Med Bay?", "Anything I should know?", "I’ll see you later.")
+
+[node name="Darren" parent="WorldRoot/MedBayWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(154, 226)
+actor_id = &"darren_kopf"
+actor_display_name = "Darren Kopf"
+sprite_texture_path = "res://assets/actors/Darren/standard/darren_front_idle.png"
+south_texture_path = "res://assets/actors/Darren/standard/darren_front_idle.png"
+south_west_texture_path = "res://assets/actors/Darren/standard/darren_front_left_idle.png"
+west_texture_path = "res://assets/actors/Darren/standard/darren_left_idle.png"
+north_west_texture_path = "res://assets/actors/Darren/standard/darren_back_left_idle.png"
+north_texture_path = "res://assets/actors/Darren/standard/darren_back_idle.png"
+north_east_texture_path = "res://assets/actors/Darren/standard/darren_back_right_idle.png"
+east_texture_path = "res://assets/actors/Darren/standard/darren_right_idle.png"
+south_east_texture_path = "res://assets/actors/Darren/standard/darren_front_right_idle.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.4
+home_room = &"headquarters_med_bay"
+current_room = &"headquarters_med_bay"
+allowed_rooms = PackedStringArray("headquarters_med_bay", "headquarters_foyer", "headquarters_training")
+can_follow = true
+ambient_motion_enabled = true
+roam_radius = 12.0
+ambient_move_speed = 14.0
+interaction_prompt = "Talk to Darren"
+interaction_action = "talk_darren_kopf"
+dialogue_role = "Night Division Founder"
+dialogue_faction = "Night Division"
+dialogue_portrait_root = "res://assets/actors/Darren/portrait/"
+dialogue_neutral_portrait_path = "res://assets/actors/Darren/portrait/darren_neutral.png"
+dialogue_accent_theme = "amber"
+dialogue_opening_line = "Need something?"
+dialogue_suggestion_labels = PackedStringArray("How are you feeling?", "What are you doing here?", "Is there anything I can do?", "I’ll leave you to it.")
+dialogue_suggestion_lines = PackedStringArray("How are you feeling?", "What are you doing here?", "Is there anything I can do?", "I’ll leave you to it.")
+
+[node name="CameraAnchor" type="Camera2D" parent="WorldRoot/MedBayWorld/Actors/PlayerActor/CameraAnchor"]
+position = Vector2(0, -128)
+zoom = Vector2(1.2, 1.2)
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
+limit_left = 0
+limit_top = 0
+limit_right = 576
+limit_bottom = 384
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.18
+drag_top_margin = 0.2
+drag_right_margin = 0.22
+drag_bottom_margin = 0.18
+
+[node name="InteractionAreas" type="Node2D" parent="WorldRoot/MedBayWorld"]
+
+[node name="FoyerPassageInteractable" type="Area2D" parent="WorldRoot/MedBayWorld/InteractionAreas"]
+position = Vector2(28, 190)
+script = ExtResource("9_interactable")
+interaction_id = &"med_bay_foyer_passage"
+interaction_type = &"room_transition"
+display_name = "Foyer"
+prompt_text = "Return to the Foyer"
+continued_conversation_available = false
+destination_scene_path = "res://worlds/headquarters/foyer/foyer.tscn"
+destination_spawn_id = &"from_med_bay"
+destination_facing = "west"
+
+[node name="FoyerPassageShape" type="CollisionShape2D" parent="WorldRoot/MedBayWorld/InteractionAreas/FoyerPassageInteractable"]
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="InteractionPrompt" type="Label" parent="UIRoot"]
+offset_left = 188.0
+offset_top = 286.0
+offset_right = 388.0
+offset_bottom = 314.0
+text = "[E] Interact"
+horizontal_alignment = 1
+
+[node name="ChatPanel" parent="UIRoot" instance=ExtResource("5_chat_panel")]
+default_location_id = "headquarters_med_bay"
+
+[node name="PlayerController" type="Node" parent="Runtime"]
+script = ExtResource("4_player_controller")
+controlled_actor_path = NodePath("../../WorldRoot/MedBayWorld/Actors/PlayerActor")
+
+[node name="PlayerInputAdapter" type="Node" parent="Runtime"]
+script = ExtResource("6_input_adapter")
+player_controller_path = NodePath("../PlayerController")
+
+[node name="ChronicleRuntimeClient" type="Node" parent="Runtime"]
+script = ExtResource("7_chronicle_client")
+
+[node name="InteractionController" type="Node" parent="Runtime"]
+script = ExtResource("8_interaction_controller")
+player_path = NodePath("../../WorldRoot/MedBayWorld/Actors/PlayerActor")
+input_adapter_path = NodePath("../PlayerInputAdapter")
+prompt_path = NodePath("../../UIRoot/InteractionPrompt")
+chat_panel_path = NodePath("../../UIRoot/ChatPanel")
+chronicle_client_path = NodePath("../ChronicleRuntimeClient")

@@ -1,5 +1,8 @@
 extends Node
 
+const HeadquartersRoomRouter = preload("res://scripts/world/headquarters_room_router.gd")
+const FollowerManager = preload("res://scripts/actors/follower_manager.gd")
+
 @export var player_path: NodePath
 @export var input_adapter_path: NodePath
 @export var prompt_path: NodePath
@@ -13,6 +16,7 @@ var _chat_panel: Control
 var _chronicle_client: Node
 var _current_interactable: Area2D
 var _chronicle_pending: bool = false
+var _room_transition_pending: bool = false
 var _active_interaction_request: Dictionary = {}
 var _active_npc: CharacterBody2D
 var _completed_story_interactions: Dictionary = {}
@@ -33,6 +37,8 @@ func _ready() -> void:
 
 	_input_adapter.interact_requested.connect(_on_interact_requested)
 	_chat_panel.chat_closed.connect(_on_chat_closed)
+	if _chat_panel.has_signal(&"local_action_requested"):
+		_chat_panel.connect(&"local_action_requested", _on_dialogue_local_action_requested)
 	_chronicle_client.action_completed.connect(_on_chronicle_action_completed)
 	_chronicle_client.action_failed.connect(_on_chronicle_action_failed)
 	call_deferred("_connect_interactables")
@@ -60,11 +66,27 @@ func _on_interaction_unavailable(interactable: Area2D) -> void:
 
 
 func _on_interact_requested() -> void:
+	if _room_transition_pending:
+		return
 	if _current_interactable != null and not _chat_panel.visible:
 		_current_interactable.activate(_player)
 
 
 func _on_interaction_activated(request: Dictionary) -> void:
+	if request.get("interaction_type") == &"room_transition":
+		if _room_transition_pending:
+			return
+		_room_transition_pending = true
+		_hide_prompt()
+		_input_adapter.set_movement_enabled(false)
+		FollowerManager.mark_transitioning(get_tree())
+		call_deferred(
+			"_perform_room_transition",
+			String(request.get("destination_scene_path", "")),
+			StringName(request.get("destination_spawn_id", &"default")),
+			StringName(request.get("destination_facing", "south")),
+		)
+		return
 	if request.get("interaction_type") == &"advance_chronicle":
 		if _chronicle_pending:
 			return
@@ -88,9 +110,33 @@ func _on_interaction_activated(request: Dictionary) -> void:
 	if request.get("interaction_type") != &"open_companion_chat":
 		push_warning("Unsupported interaction type: %s" % request.get("interaction_type"))
 		return
+	_active_npc = get_node_or_null(NodePath(request.get("actor_path", ""))) as CharacterBody2D
+	_active_interaction_request = _with_follower_context(request, _active_npc)
+	_face_active_npc_to_player()
 	_hide_prompt()
 	_input_adapter.set_movement_enabled(false)
-	_chat_panel.open_conversation(request)
+	_pause_active_npc(true)
+	_chat_panel.open_conversation(_active_interaction_request)
+
+
+func _perform_room_transition(
+	destination_scene_path: String,
+	destination_spawn_id: StringName,
+	destination_facing: StringName
+) -> void:
+	var transition_error: Error = HeadquartersRoomRouter.change_room(
+		get_tree(),
+		destination_scene_path,
+		destination_spawn_id,
+		destination_facing
+	)
+	if transition_error == OK:
+		return
+	_room_transition_pending = false
+	FollowerManager.cancel_transition(get_tree())
+	_input_adapter.set_movement_enabled(true)
+	_prompt.text = "That passage is not available."
+	_prompt.visible = true
 
 
 func _on_chronicle_action_completed(response: Dictionary) -> void:
@@ -102,12 +148,14 @@ func _on_chronicle_action_completed(response: Dictionary) -> void:
 	if bool(response.get("_scene_transitioned", false)):
 		_pending_transition_title = String(response.get("current_scene", response.get("chronicle_scene_title", "")))
 	print("[CoglineInteraction] scene_transition=%s" % bool(response.get("_scene_transitioned", false)))
+	_pause_active_npc(true)
 	_open_npc_conversation(narrative)
 
 
 func _on_chronicle_action_failed(message: String) -> void:
 	_chronicle_pending = false
 	_input_adapter.set_movement_enabled(true)
+	_pause_active_npc(false)
 	_return_active_npc_to_idle()
 	_prompt.text = message
 	_prompt.visible = true
@@ -116,6 +164,7 @@ func _on_chronicle_action_failed(message: String) -> void:
 
 func _on_chat_closed() -> void:
 	_input_adapter.set_movement_enabled(true)
+	_pause_active_npc(false)
 	_return_active_npc_to_idle()
 	print("[CoglineInteraction] interaction ended")
 	if not _pending_transition_title.is_empty():
@@ -131,6 +180,7 @@ func _on_chat_closed() -> void:
 func _open_npc_conversation(narrative: String) -> void:
 	_hide_prompt()
 	_input_adapter.set_movement_enabled(false)
+	_pause_active_npc(true)
 	var conversation_available := bool(_active_interaction_request.get("continued_conversation_available", false))
 	var limitation := String(_active_interaction_request.get("conversation_unavailable_message", ""))
 	if narrative.is_empty():
@@ -151,9 +201,61 @@ func _return_active_npc_to_idle() -> void:
 	_active_interaction_request = {}
 
 
+func _pause_active_npc(paused: bool) -> void:
+	if _active_npc != null and _active_npc.has_method(&"set_dialogue_paused"):
+		_active_npc.call(&"set_dialogue_paused", paused)
+
+
+func _with_follower_context(request: Dictionary, actor: CharacterBody2D) -> Dictionary:
+	var prepared: Dictionary = request.duplicate(true)
+	if actor == null:
+		return prepared
+	var config_value: Variant = prepared.get("conversation_config", {})
+	var config: Dictionary = {}
+	if config_value is Dictionary:
+		config = config_value.duplicate(true)
+	var actor_id: StringName = StringName(actor.get(&"actor_id"))
+	config["can_follow"] = bool(actor.get(&"can_follow"))
+	config["is_following"] = FollowerManager.is_following(actor_id)
+	prepared["conversation_config"] = config
+	return prepared
+
+
+func _on_dialogue_local_action_requested(action: StringName, actor_id: StringName) -> void:
+	if action != &"toggle_follow" or _room_transition_pending:
+		return
+	if _active_npc == null or StringName(_active_npc.get(&"actor_id")) != actor_id:
+		return
+	var following: bool = FollowerManager.is_following(actor_id)
+	var feedback: String = ""
+	if following:
+		FollowerManager.remove_follower(actor_id)
+		if _active_npc.has_method(&"stop_following"):
+			_active_npc.call(&"stop_following")
+		FollowerManager.refresh_formation_slots(get_tree())
+		following = false
+		feedback = "%s stopped following." % String(_active_npc.get(&"actor_display_name"))
+	else:
+		var result: Dictionary = FollowerManager.add_follower(_active_npc)
+		if bool(result.get("ok", false)):
+			var slot: int = int(result.get("slot", -1))
+			var room_id: StringName = StringName(_active_npc.get(&"current_room"))
+			following = bool(_active_npc.call(&"start_following", _player, slot, room_id, false))
+			if following:
+				feedback = "%s is following you." % String(_active_npc.get(&"actor_display_name"))
+			else:
+				FollowerManager.remove_follower(actor_id)
+				feedback = "That companion cannot follow right now."
+		else:
+			feedback = String(result.get("message", "That companion cannot follow right now."))
+	if _chat_panel.has_method(&"set_follow_action_state"):
+		_chat_panel.call(&"set_follow_action_state", following, feedback)
+
+
 func _on_interaction_cancelled(_interaction_id: StringName) -> void:
 	_chronicle_pending = false
 	_input_adapter.set_movement_enabled(true)
+	_pause_active_npc(false)
 	_return_active_npc_to_idle()
 	print("[CoglineInteraction] interaction cancelled")
 

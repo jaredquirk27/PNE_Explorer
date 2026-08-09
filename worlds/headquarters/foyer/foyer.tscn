@@ -1,23 +1,27 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=22 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/explorer.tscn" id="1_explorer"]
 [ext_resource type="PackedScene" path="res://scenes/actors/player_actor.tscn" id="2_player_actor"]
 [ext_resource type="PackedScene" path="res://scenes/actors/static_npc_actor.tscn" id="3_static_npc"]
 [ext_resource type="Script" path="res://scripts/controllers/player_controller.gd" id="4_player_controller"]
-[ext_resource type="PackedScene" path="res://scenes/ui/companion_chat_panel.tscn" id="5_chat_panel"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_screen.tscn" id="5_chat_panel"]
 [ext_resource type="Script" path="res://scripts/controllers/player_input_adapter.gd" id="6_input_adapter"]
 [ext_resource type="Script" path="res://scripts/api/chronicle_runtime_client.gd" id="7_chronicle_client"]
 [ext_resource type="Script" path="res://scripts/interaction/interaction_controller.gd" id="8_interaction_controller"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="9_interactable"]
-[ext_resource type="Texture2D" path="res://worlds/headquarters/foyer/headquarters_foyer.png" id="10_foyer_bg"]
+[ext_resource type="Texture2D" path="res://worlds/headquarters/foyer/headquarter_foyer.png" id="10_foyer_bg"]
 [ext_resource type="Resource" path="res://assets/actors/Astrid/activities/arm_cross/arm_cross_activity.tres" id="11_astrid_arm_cross"]
 [ext_resource type="Resource" path="res://assets/actors/Kayla/activities/painting/painting_activity.tres" id="12_kayla_painting"]
+[ext_resource type="Script" path="res://scripts/world/headquarters_room.gd" id="13_headquarters_room"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_top_wall"]
 size = Vector2(576, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_side_wall"]
 size = Vector2(16, 384)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_east_wall_segment"]
+size = Vector2(16, 140)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bottom_wall"]
 size = Vector2(168, 16)
@@ -37,6 +41,13 @@ size = Vector2(48, 48)
 [node name="Explorer" instance=ExtResource("1_explorer")]
 
 [node name="FoyerWorld" type="Node2D" parent="WorldRoot"]
+script = ExtResource("13_headquarters_room")
+room_id = &"headquarters_foyer"
+room_display_name = "Night Division Foyer"
+player_path = NodePath("Actors/PlayerActor")
+spawn_points_path = NodePath("SpawnPoints")
+default_spawn_id = &"default"
+default_facing = "north"
 
 [node name="Background" type="Node2D" parent="WorldRoot/FoyerWorld"]
 z_index = -50
@@ -59,9 +70,13 @@ shape = SubResource("RectangleShape2D_top_wall")
 position = Vector2(8, 192)
 shape = SubResource("RectangleShape2D_side_wall")
 
-[node name="RightWall" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/OuterWalls"]
-position = Vector2(568, 192)
-shape = SubResource("RectangleShape2D_side_wall")
+[node name="RightUpperWall" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/OuterWalls"]
+position = Vector2(568, 70)
+shape = SubResource("RectangleShape2D_east_wall_segment")
+
+[node name="RightLowerWall" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/OuterWalls"]
+position = Vector2(568, 314)
+shape = SubResource("RectangleShape2D_east_wall_segment")
 
 [node name="LowerLeftWall" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/Collision/OuterWalls"]
 position = Vector2(110, 376)
@@ -113,6 +128,14 @@ shape = SubResource("RectangleShape2D_couch")
 position = Vector2(542, 248)
 shape = SubResource("RectangleShape2D_couch")
 
+[node name="SpawnPoints" type="Node2D" parent="WorldRoot/FoyerWorld"]
+
+[node name="default" type="Marker2D" parent="WorldRoot/FoyerWorld/SpawnPoints"]
+position = Vector2(288, 252)
+
+[node name="from_med_bay" type="Marker2D" parent="WorldRoot/FoyerWorld/SpawnPoints"]
+position = Vector2(520, 192)
+
 [node name="Actors" type="Node2D" parent="WorldRoot/FoyerWorld"]
 
 [node name="PlayerActor" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("2_player_actor")]
@@ -122,7 +145,7 @@ visual_scale = 0.36
 [node name="Astrid" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
 position = Vector2(338, 164)
 actor_id = &"astrid"
-actor_display_name = "Astrid"
+actor_display_name = "Astrid Halden"
 sprite_texture_path = "res://assets/actors/Astrid/standard/astrid_front_idle.png"
 south_texture_path = "res://assets/actors/Astrid/standard/astrid_front_idle.png"
 south_west_texture_path = "res://assets/actors/Astrid/standard/astrid_front_left_idle.png"
@@ -139,12 +162,25 @@ roam_radius = 14.0
 ambient_move_speed = 16.0
 interaction_prompt = "Talk to Astrid"
 interaction_action = "talk_astrid"
+home_room = &"headquarters_foyer"
+current_room = &"headquarters_foyer"
+allowed_rooms = PackedStringArray("headquarters_foyer", "headquarters_med_bay")
+can_follow = true
+dialogue_role = "Night Division Field Leader"
+dialogue_faction = "Night Division"
+dialogue_portrait_root = "res://assets/actors/Astrid/portrait/"
+dialogue_neutral_portrait_path = "res://assets/actors/Astrid/portrait/astrid_neutral.png"
+dialogue_serious_portrait_path = "res://assets/actors/Astrid/portrait/strid_serious.png"
+dialogue_accent_theme = "silver"
+dialogue_opening_line = "You’re settling in faster than I expected."
+dialogue_suggestion_labels = PackedStringArray("What gave me away?", "Tell me about Night Division.", "I’ve had stranger first days.", "I’ll let you get back to work.")
+dialogue_suggestion_lines = PackedStringArray("What gave me away?", "Tell me about Night Division.", "I’ve had stranger first days.", "I’ll let you get back to work.")
 activity_definitions = [ExtResource("11_astrid_arm_cross")]
 
 [node name="Ben" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
 position = Vector2(176, 132)
 actor_id = &"ben"
-actor_display_name = "Ben"
+actor_display_name = "Ben Kessler"
 sprite_texture_path = "res://assets/actors/Ben/standard/ben_front_idle.png"
 south_texture_path = "res://assets/actors/Ben/standard/ben_front_idle.png"
 south_west_texture_path = "res://assets/actors/Ben/standard/ben_front_left_idle.png"
@@ -161,27 +197,51 @@ roam_radius = 12.0
 ambient_move_speed = 14.0
 interaction_prompt = "Talk to Ben"
 interaction_action = "talk_ben"
+home_room = &"headquarters_foyer"
+current_room = &"headquarters_foyer"
+allowed_rooms = PackedStringArray("headquarters_foyer", "headquarters_med_bay")
+can_follow = true
+dialogue_role = "Technical Specialist"
+dialogue_faction = "Night Division"
+dialogue_portrait_root = "res://assets/actors/Ben/standard/portrait/"
+dialogue_neutral_portrait_path = "res://assets/actors/Ben/standard/portrait/ben_neutral.png"
+dialogue_accent_theme = "navy"
+dialogue_opening_line = "Something broken, or are you just checking whether I’m still here?"
+dialogue_suggestion_labels = PackedStringArray("What are you working on?", "Do you trust Night Division?", "What do you think of Astrid?", "I’ll let you get back to it.")
+dialogue_suggestion_lines = PackedStringArray("What are you working on?", "Do you trust Night Division?", "What do you think of Astrid?", "I’ll let you get back to it.")
 
 [node name="Erika" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
 position = Vector2(108, 246)
 actor_id = &"erika"
-actor_display_name = "Erika"
+actor_display_name = "Erika Celeste"
 sprite_texture_path = "res://assets/actors/Erika/standard/erika_front_idle.png"
 south_texture_path = "res://assets/actors/Erika/standard/erika_front_idle.png"
 south_west_texture_path = "res://assets/actors/Erika/standard/erika_front_left_idle.png"
-west_texture_path = "res://assets/actors/Erika/standard/erika_right_idle.png"
-north_west_texture_path = "res://assets/actors/Erika/standard/erika_back_right_idle.png"
+west_texture_path = "res://assets/actors/Erika/standard/erika_left_idle.png"
+north_west_texture_path = "res://assets/actors/Erika/standard/erika_back_left_idle.png"
 north_texture_path = "res://assets/actors/Erika/standard/erika_back_idle.png"
-north_east_texture_path = "res://assets/actors/Erika/standard/erika_back_left_idle.png"
-east_texture_path = "res://assets/actors/Erika/standard/erika_left_idle.png"
-south_east_texture_path = "res://assets/actors/Erika/standard/erika_front_left_idle.png"
+north_east_texture_path = "res://assets/actors/Erika/standard/kayla_back_right_idle.png"
+east_texture_path = "res://assets/actors/Erika/standard/erika_right_idle.png"
+south_east_texture_path = "res://assets/actors/Erika/standard/erika_front_right_idle.png"
 sprite_offset = Vector2(0, -32)
 visual_scale = 0.4
+home_room = &"headquarters_foyer"
+current_room = &"headquarters_foyer"
+allowed_rooms = PackedStringArray("headquarters_foyer", "headquarters_med_bay")
+can_follow = true
 ambient_motion_enabled = true
 roam_radius = 12.0
 ambient_move_speed = 14.0
 interaction_prompt = "Talk to Erika"
 interaction_action = "talk_erika"
+dialogue_role = "Operations Initiator"
+dialogue_faction = "Night Division"
+dialogue_portrait_root = "res://assets/actors/Erika/standard/portrait/"
+dialogue_neutral_portrait_path = "res://assets/actors/Erika/standard/portrait/erika_neutral.png"
+dialogue_accent_theme = "gold"
+dialogue_opening_line = "What did you find?"
+dialogue_suggestion_labels = PackedStringArray("What are you working on?", "Have you found anything useful?", "What should I look into?", "I’ll see you around.")
+dialogue_suggestion_lines = PackedStringArray("What are you working on?", "Have you found anything useful?", "What should I look into?", "I’ll see you around.")
 
 [node name="Kayla" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
 position = Vector2(448, 132)
@@ -201,32 +261,19 @@ visual_scale = 0.36
 ambient_motion_enabled = false
 interaction_prompt = "Talk to Kayla"
 interaction_action = "talk_kayla"
+can_follow = false
+dialogue_role = "Headquarters Resident"
+dialogue_faction = "The Meridian"
+dialogue_portrait_root = ""
+dialogue_accent_theme = "monochrome"
+dialogue_opening_line = "Careful where you stand. I’m still deciding what belongs in that part of the mural."
+dialogue_suggestion_labels = PackedStringArray("How is the mural coming?", "What are you painting?", "How are you settling in?", "I’ll let you work.")
+dialogue_suggestion_lines = PackedStringArray("How is the mural coming?", "What are you painting?", "How are you settling in?", "I’ll let you work.")
 activity_definitions = [ExtResource("12_kayla_painting")]
-
-[node name="Sundrop" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
-position = Vector2(402, 308)
-actor_id = &"sundrop"
-actor_display_name = "Sundrop"
-sprite_texture_path = "res://assets/actors/Sundrop/standard/sundrop_front_idle.png"
-south_texture_path = "res://assets/actors/Sundrop/standard/sundrop_front_idle.png"
-south_west_texture_path = "res://assets/actors/Sundrop/standard/sundrop_front_left_idle.png"
-west_texture_path = "res://assets/actors/Sundrop/standard/sundrop_left_idle.png"
-north_west_texture_path = "res://assets/actors/Sundrop/standard/sundrop_back_left_idle.png"
-north_texture_path = "res://assets/actors/Sundrop/standard/sundrop_back_idle.png"
-north_east_texture_path = "res://assets/actors/Sundrop/standard/sundrop_back_right_idle.png"
-east_texture_path = "res://assets/actors/Sundrop/standard/sundrop_right_idle.png"
-south_east_texture_path = "res://assets/actors/Sundrop/standard/sundrop_front_right_idle.png"
-sprite_offset = Vector2(0, -32)
-visual_scale = 0.4
-ambient_motion_enabled = true
-roam_radius = 16.0
-ambient_move_speed = 18.0
-interaction_prompt = "Talk to Sundrop"
-interaction_action = "talk_sundrop"
 
 [node name="Tali" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
 position = Vector2(422, 180)
-actor_id = &"tali"
+actor_id = &"tali_viskyn"
 actor_display_name = "Tali Viskyn"
 sprite_texture_path = "res://assets/actors/Tali/standard/tali_front_idle.png"
 south_texture_path = "res://assets/actors/Tali/standard/tali_front_idle.png"
@@ -244,7 +291,143 @@ modulate = Color(1, 1, 1, 1)
 z_index = 5
 ambient_motion_enabled = false
 interaction_prompt = "Talk to Tali"
-interaction_action = "talk_tali"
+interaction_action = "talk_tali_viskyn"
+home_room = &"headquarters_foyer"
+current_room = &"headquarters_foyer"
+allowed_rooms = PackedStringArray("headquarters_foyer", "headquarters_med_bay")
+can_follow = true
+dialogue_role = "Engineer"
+dialogue_faction = "Night Division"
+dialogue_portrait_root = "res://assets/actors/Tali/standard/portrait/"
+dialogue_neutral_portrait_path = "res://assets/actors/Tali/standard/portrait/tali_neutral.png"
+dialogue_accent_theme = "cyan"
+dialogue_opening_line = "Give me a second. This system is behaving like it resents being repaired."
+dialogue_suggestion_labels = PackedStringArray("How are the systems holding up?", "What happened with Novagen?", "Do you need help with anything?", "I’ll let you work.")
+dialogue_suggestion_lines = PackedStringArray("How are the systems holding up?", "What happened with Novagen?", "Do you need help with anything?", "I’ll let you work.")
+
+[node name="Sundrop" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(462, 286)
+actor_id = &"sundrop"
+actor_display_name = "Sundrop"
+sprite_texture_path = "res://assets/actors/Sundrop/standard/sundrop_front_idle.png"
+south_texture_path = "res://assets/actors/Sundrop/standard/sundrop_front_idle.png"
+south_west_texture_path = "res://assets/actors/Sundrop/standard/sundrop_front_left_idle.png"
+west_texture_path = "res://assets/actors/Sundrop/standard/sundrop_left_idle.png"
+north_west_texture_path = "res://assets/actors/Sundrop/standard/sundrop_back_left_idle.png"
+north_texture_path = "res://assets/actors/Sundrop/standard/sundrop_back_idle.png"
+north_east_texture_path = "res://assets/actors/Sundrop/standard/sundrop_back_right_idle.png"
+east_texture_path = "res://assets/actors/Sundrop/standard/sundrop_right_idle.png"
+south_east_texture_path = "res://assets/actors/Sundrop/standard/sundrop_front_right_idle.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.4
+home_room = &"headquarters_foyer"
+current_room = &"headquarters_foyer"
+allowed_rooms = PackedStringArray("headquarters_foyer", "headquarters_med_bay")
+can_follow = true
+ambient_motion_enabled = true
+roam_radius = 16.0
+ambient_move_speed = 18.0
+interaction_prompt = "Talk to Sundrop"
+interaction_action = "talk_sundrop"
+dialogue_role = "Trainer"
+dialogue_faction = "Night Division"
+dialogue_portrait_root = "res://assets/actors/Sundrop/standard/portrait/"
+dialogue_neutral_portrait_path = "res://assets/actors/Sundrop/standard/portrait/sundrop_neutral.png"
+dialogue_accent_theme = "amber"
+dialogue_opening_line = "You ready to work?"
+dialogue_suggestion_labels = PackedStringArray("What should I train?", "How ready is the team?", "What am I doing wrong?", "I’ll let you work.")
+dialogue_suggestion_lines = PackedStringArray("What should I train?", "How ready is the team?", "What am I doing wrong?", "I’ll let you work.")
+
+[node name="Pika" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(106, 158)
+actor_id = &"pika"
+actor_display_name = "Pika"
+sprite_texture_path = "res://assets/actors/Pika/standard/pika_front_idle.png"
+south_texture_path = "res://assets/actors/Pika/standard/pika_front_idle.png"
+south_west_texture_path = "res://assets/actors/Pika/standard/pika_front_left_idle.png"
+west_texture_path = "res://assets/actors/Pika/standard/pika_left_idle.png"
+north_west_texture_path = "res://assets/actors/Pika/standard/pika_back_left_idle.png"
+north_texture_path = "res://assets/actors/Pika/standard/pika_back_idle.png"
+north_east_texture_path = "res://assets/actors/Pika/standard/pika_back_right_idle.png"
+east_texture_path = "res://assets/actors/Pika/standard/pika_right_idle.png"
+south_east_texture_path = "res://assets/actors/Pika/standard/pika_front_right_idle.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.4
+ambient_motion_enabled = false
+interaction_prompt = "Talk to Pika"
+interaction_action = "talk_pika"
+can_follow = false
+dialogue_role = "Headquarters Quartermaster"
+dialogue_faction = "Night Division"
+dialogue_portrait_root = "res://assets/actors/Pika/portrait/"
+dialogue_neutral_portrait_path = "res://assets/actors/Pika/portrait/pika_neutral.png"
+dialogue_accent_theme = "amber"
+dialogue_opening_line = "Need something from supplies?"
+dialogue_suggestion_labels = PackedStringArray("What do we have in stock?", "Is anything running low?", "What should I bring back?", "I’ll let you work.")
+dialogue_suggestion_lines = PackedStringArray("What do we have in stock?", "Is anything running low?", "What should I bring back?", "I’ll let you work.")
+
+[node name="Dom" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(246, 244)
+actor_id = &"dom"
+actor_display_name = "Dom"
+sprite_texture_path = "res://assets/actors/Dom/standard/dom_front_idle.png"
+south_texture_path = "res://assets/actors/Dom/standard/dom_front_idle.png"
+south_west_texture_path = "res://assets/actors/Dom/standard/dom_front_left_idle.png"
+west_texture_path = "res://assets/actors/Dom/standard/dom_left_idle.png"
+north_west_texture_path = "res://assets/actors/Dom/standard/dom_back_left_idle.png"
+north_texture_path = "res://assets/actors/Dom/standard/dom_back_idle.png"
+north_east_texture_path = "res://assets/actors/Dom/standard/dom_back_right_idle.png"
+east_texture_path = "res://assets/actors/Dom/standard/dom_right_idle.png"
+south_east_texture_path = "res://assets/actors/Dom/standard/dom_front_right_idle.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.4
+ambient_motion_enabled = true
+roam_radius = 14.0
+ambient_move_speed = 14.0
+interaction_prompt = "Talk to Dom"
+interaction_action = "talk_dom"
+can_follow = false
+dialogue_role = "Independent Mechanic / Scavenger"
+dialogue_faction = "Independent"
+dialogue_portrait_root = "res://assets/actors/Dom/portrait/"
+dialogue_neutral_portrait_path = "res://assets/actors/Dom/portrait/dom_neutral.png"
+dialogue_accent_theme = "green"
+dialogue_opening_line = "Hey. What’s up?"
+dialogue_suggestion_labels = PackedStringArray("How are things going?", "What are you working on?", "Anything I should know?", "I’ll catch you later.")
+dialogue_suggestion_lines = PackedStringArray("How are things going?", "What are you working on?", "Anything I should know?", "I’ll catch you later.")
+
+[node name="Sirena" parent="WorldRoot/FoyerWorld/Actors" instance=ExtResource("3_static_npc")]
+position = Vector2(350, 270)
+actor_id = &"sirena"
+actor_display_name = "Sirena"
+sprite_texture_path = "res://assets/actors/Sirena/standard/sirena_front_idle.png"
+south_texture_path = "res://assets/actors/Sirena/standard/sirena_front_idle.png"
+south_west_texture_path = "res://assets/actors/Sirena/standard/sirena_front_left_idle.png"
+west_texture_path = "res://assets/actors/Sirena/standard/sirena_left_idle.png"
+north_west_texture_path = "res://assets/actors/Sirena/standard/sirena_back_left_idle.png"
+north_texture_path = "res://assets/actors/Sirena/standard/sirena_back_idle.png"
+north_east_texture_path = "res://assets/actors/Sirena/standard/sirena_back_right_idle.png"
+east_texture_path = "res://assets/actors/Sirena/standard/sirena_right_idle.png"
+south_east_texture_path = "res://assets/actors/Sirena/standard/sirena_front_right_idle.png"
+sprite_offset = Vector2(0, -32)
+visual_scale = 0.4
+home_room = &"headquarters_foyer"
+current_room = &"headquarters_foyer"
+allowed_rooms = PackedStringArray("headquarters_foyer", "headquarters_lounge")
+ambient_motion_enabled = true
+roam_radius = 12.0
+ambient_move_speed = 14.0
+interaction_prompt = "Talk to Sirena"
+interaction_action = "talk_sirena"
+can_follow = false
+dialogue_role = "World Guide / Mission Navigator"
+dialogue_faction = "Night Division"
+dialogue_portrait_root = "res://assets/actors/Sirena/portrait/"
+dialogue_neutral_portrait_path = "res://assets/actors/Sirena/portrait/sirena_neutral.png"
+dialogue_accent_theme = "blue"
+dialogue_opening_line = "You wanted to talk?"
+dialogue_suggestion_labels = PackedStringArray("How are you settling in?", "What have you noticed?", "What are you working on?", "I’ll see you around.")
+dialogue_suggestion_lines = PackedStringArray("How are you settling in?", "What have you noticed?", "What are you working on?", "I’ll see you around.")
 
 [node name="CameraAnchor" type="Camera2D" parent="WorldRoot/FoyerWorld/Actors/PlayerActor/CameraAnchor"]
 position = Vector2(0, -128)
@@ -263,6 +446,21 @@ drag_right_margin = 0.22
 drag_bottom_margin = 0.18
 
 [node name="InteractionAreas" type="Node2D" parent="WorldRoot/FoyerWorld"]
+
+[node name="MedBayPassageInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
+position = Vector2(548, 192)
+script = ExtResource("9_interactable")
+interaction_id = &"foyer_med_bay_passage"
+interaction_type = &"room_transition"
+display_name = "Med Bay"
+prompt_text = "Enter the Med Bay"
+continued_conversation_available = false
+destination_scene_path = "res://worlds/headquarters/med_bay/med_bay.tscn"
+destination_spawn_id = &"from_foyer"
+destination_facing = "east"
+
+[node name="MedBayPassageShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/MedBayPassageInteractable"]
+shape = SubResource("RectangleShape2D_interaction")
 
 [node name="FrontDoorInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
 script = ExtResource("9_interactable")
@@ -355,19 +553,6 @@ continued_conversation_available = false
 [node name="BenShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/BenInteractable"]
 shape = SubResource("RectangleShape2D_interaction")
 
-[node name="ErikaInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
-script = ExtResource("9_interactable")
-interaction_id = &"erika_talk"
-interaction_type = &"open_companion_chat"
-display_name = "Erika"
-prompt_text = "Talk to Erika"
-companion_id = &"erika"
-chronicle_action = "talk_erika"
-continued_conversation_available = false
-
-[node name="ErikaShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/ErikaInteractable"]
-shape = SubResource("RectangleShape2D_interaction")
-
 [node name="KaylaInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
 script = ExtResource("9_interactable")
 interaction_id = &"kayla_talk"
@@ -379,19 +564,6 @@ chronicle_action = "talk_kayla"
 continued_conversation_available = false
 
 [node name="KaylaShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/KaylaInteractable"]
-shape = SubResource("RectangleShape2D_interaction")
-
-[node name="SundropInteractable" type="Area2D" parent="WorldRoot/FoyerWorld/InteractionAreas"]
-script = ExtResource("9_interactable")
-interaction_id = &"sundrop_talk"
-interaction_type = &"open_companion_chat"
-display_name = "Sundrop"
-prompt_text = "Talk to Sundrop"
-companion_id = &"sundrop"
-chronicle_action = "talk_sundrop"
-continued_conversation_available = false
-
-[node name="SundropShape" type="CollisionShape2D" parent="WorldRoot/FoyerWorld/InteractionAreas/SundropInteractable"]
 shape = SubResource("RectangleShape2D_interaction")
 
 [node name="InteractionPrompt" type="Label" parent="UIRoot"]

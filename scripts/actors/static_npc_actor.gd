@@ -19,6 +19,23 @@ const NPCActivityDefinition = preload("res://scripts/actors/npc_activity_definit
 @export var interaction_prompt: String = "Talk"
 @export var interaction_action: String = ""
 @export var interaction_enabled: bool = true
+@export var home_room: StringName = &"headquarters_foyer"
+@export var current_room: StringName = &"headquarters_foyer"
+@export var allowed_rooms: PackedStringArray = PackedStringArray(["headquarters_foyer"])
+@export var can_follow: bool = false
+@export_range(20.0, 240.0, 1.0) var follow_move_speed: float = 120.0
+@export_range(2.0, 32.0, 1.0) var follow_stop_distance: float = 10.0
+@export_range(4.0, 40.0, 1.0) var follow_resume_distance: float = 14.0
+@export var dialogue_role: String = "Night Division Member"
+@export var dialogue_faction: String = "Night Division"
+@export_dir var dialogue_portrait_root: String = ""
+@export_file("*.png") var dialogue_neutral_portrait_path: String = ""
+@export_file("*.png") var dialogue_serious_portrait_path: String = ""
+@export var dialogue_default_expression: String = "neutral"
+@export var dialogue_accent_theme: String = "navy"
+@export var dialogue_opening_line: String = "What's on your mind?"
+@export var dialogue_suggestion_labels: PackedStringArray = []
+@export var dialogue_suggestion_lines: PackedStringArray = []
 @export var ambient_motion_enabled: bool = true
 @export_range(8.0, 128.0, 1.0) var roam_radius: float = 20.0
 @export_range(0.1, 8.0, 0.05) var ambient_move_speed: float = 18.0
@@ -52,6 +69,15 @@ var _activity_player_look_pending: bool = false
 var _activity_player_look_facing: StringName = &"south"
 var _activity_should_glance_player: bool = false
 var _activity_paused_for_interaction: bool = false
+var _dialogue_paused: bool = false
+var _following_player: bool = false
+var _follow_transitioning: bool = false
+var _follow_leader: CharacterBody2D
+var _follow_slot: int = -1
+var _follow_moving: bool = false
+var _last_leader_direction: Vector2 = Vector2.DOWN
+var _ambient_enabled_before_following: bool = true
+var _collision_layer_before_following: int = 1
 
 
 func _ready() -> void:
@@ -68,14 +94,50 @@ func _ready() -> void:
 	if interaction_area != null:
 		interaction_area.set(&"display_name", actor_display_name)
 		interaction_area.set(&"prompt_text", interaction_prompt)
+		interaction_area.set(&"companion_id", actor_id)
 		interaction_area.set(&"chronicle_action", interaction_action)
 		interaction_area.set(&"interaction_id", actor_id)
+		interaction_area.set(&"conversation_config", get_conversation_config())
 	_pick_new_ambient_target(true)
 	_select_activity_timer(true)
 	_refresh_idle_animation()
 
 
+func get_conversation_config() -> Dictionary:
+	var portrait_paths: Dictionary = {}
+	if not dialogue_neutral_portrait_path.strip_edges().is_empty():
+		portrait_paths["neutral"] = dialogue_neutral_portrait_path
+	if not dialogue_serious_portrait_path.strip_edges().is_empty():
+		portrait_paths["serious"] = dialogue_serious_portrait_path
+	var suggestions: Array[Dictionary] = []
+	for index in mini(dialogue_suggestion_labels.size(), dialogue_suggestion_lines.size()):
+		suggestions.append({
+			"label": dialogue_suggestion_labels[index],
+			"spoken_line": dialogue_suggestion_lines[index],
+		})
+	return {
+		"actor_id": String(actor_id),
+		"display_name": actor_display_name,
+		"role": dialogue_role,
+		"faction": dialogue_faction,
+		"interaction_action": interaction_action,
+		"location_id": String(current_room),
+		"can_follow": can_follow,
+		"portrait_root": dialogue_portrait_root,
+		"portrait_paths": portrait_paths,
+		"default_expression": dialogue_default_expression,
+		"accent_theme": dialogue_accent_theme,
+		"opening_line": dialogue_opening_line,
+		"suggestions": suggestions,
+	}
+
+
 func _physics_process(delta: float) -> void:
+	if _dialogue_paused:
+		return
+	if _following_player:
+		_update_follow_movement(delta)
+		return
 	_update_activity(delta)
 	if not ambient_motion_enabled:
 		return
@@ -221,6 +283,11 @@ func face_toward(world_position: Vector2) -> void:
 
 
 func return_to_idle() -> void:
+	if _following_player:
+		velocity = Vector2.ZERO
+		_follow_moving = false
+		_refresh_idle_animation()
+		return
 	if _activity_paused_for_interaction and _active_activity != null:
 		_current_facing = _canonical_facing(StringName(_active_activity.end_facing))
 		_activity_phase = &"idle"
@@ -242,6 +309,153 @@ func return_to_idle() -> void:
 	_ambient_state = &"pause"
 	_ambient_timer = _ambient_rng.randf_range(ambient_pause_min, ambient_pause_max)
 	_refresh_idle_animation()
+
+
+func set_dialogue_paused(paused: bool) -> void:
+	_dialogue_paused = paused
+	if paused:
+		velocity = Vector2.ZERO
+		animated_sprite.stop()
+		return
+	if _active_activity != null and _activity_phase != &"idle" and _activity_sprite_frames != null:
+		animated_sprite.sprite_frames = _activity_sprite_frames
+		_refresh_activity_frame()
+		return
+	animated_sprite.sprite_frames = _base_sprite_frames
+	_refresh_idle_animation()
+
+
+func start_following(
+	leader: CharacterBody2D,
+	slot: int,
+	room_id: StringName,
+	place_at_formation: bool = false
+) -> bool:
+	if not can_follow or leader == null:
+		return false
+	if not _following_player:
+		_ambient_enabled_before_following = _activity_resume_ambient_motion if _active_activity != null else ambient_motion_enabled
+		_collision_layer_before_following = collision_layer
+	_cancel_activity(true)
+	_active_activity = null
+	_activity_wait_timer = 0.0
+	ambient_motion_enabled = false
+	_following_player = true
+	_follow_transitioning = false
+	_follow_leader = leader
+	_follow_slot = slot
+	current_room = room_id
+	collision_layer = 0
+	add_to_group(&"headquarters_followers")
+	if interaction_area != null:
+		interaction_area.set(&"conversation_config", get_conversation_config())
+	velocity = Vector2.ZERO
+	if place_at_formation:
+		global_position = _follow_target_position().round()
+	_refresh_idle_animation()
+	return true
+
+
+func stop_following() -> void:
+	if not _following_player:
+		return
+	_following_player = false
+	_follow_transitioning = false
+	_follow_leader = null
+	_follow_slot = -1
+	_follow_moving = false
+	velocity = Vector2.ZERO
+	collision_layer = _collision_layer_before_following
+	ambient_motion_enabled = _ambient_enabled_before_following
+	remove_from_group(&"headquarters_followers")
+	_home_position = global_position
+	_ambient_state = &"pause"
+	_ambient_timer = _ambient_rng.randf_range(ambient_pause_min, ambient_pause_max)
+	_select_activity_timer(true)
+	if interaction_area != null:
+		interaction_area.set(&"conversation_config", get_conversation_config())
+	_refresh_idle_animation()
+
+
+func is_following_player() -> bool:
+	return _following_player
+
+
+func set_follow_slot(slot: int) -> void:
+	_follow_slot = slot
+
+
+func set_follow_transitioning(transitioning: bool) -> void:
+	_follow_transitioning = transitioning
+	velocity = Vector2.ZERO
+	_follow_moving = false
+	if not transitioning:
+		_refresh_idle_animation()
+
+
+func get_follower_snapshot() -> Dictionary:
+	var property_names: Array[StringName] = [
+		&"actor_id", &"actor_display_name", &"sprite_texture_path", &"south_texture_path",
+		&"south_west_texture_path", &"west_texture_path", &"north_west_texture_path",
+		&"north_texture_path", &"north_east_texture_path", &"east_texture_path",
+		&"south_east_texture_path", &"visual_scale", &"sprite_offset", &"interaction_prompt",
+		&"interaction_action", &"interaction_enabled", &"home_room", &"current_room",
+		&"allowed_rooms", &"can_follow", &"follow_move_speed", &"follow_stop_distance",
+		&"follow_resume_distance", &"dialogue_role", &"dialogue_faction",
+		&"dialogue_portrait_root", &"dialogue_neutral_portrait_path",
+		&"dialogue_serious_portrait_path", &"dialogue_default_expression",
+		&"dialogue_accent_theme", &"dialogue_opening_line", &"dialogue_suggestion_labels",
+		&"dialogue_suggestion_lines", &"ambient_motion_enabled", &"roam_radius",
+		&"ambient_move_speed", &"ambient_pause_min", &"ambient_pause_max",
+		&"activity_definitions", &"activity_debug_enabled", &"collision_layer", &"collision_mask",
+	]
+	var snapshot: Dictionary = {&"node_name": name}
+	for property_name in property_names:
+		snapshot[property_name] = get(property_name)
+	return snapshot
+
+
+func _update_follow_movement(delta: float) -> void:
+	if _follow_transitioning or _follow_leader == null or not is_instance_valid(_follow_leader):
+		velocity = Vector2.ZERO
+		_follow_moving = false
+		return
+	if not _follow_leader.velocity.is_zero_approx():
+		_last_leader_direction = _follow_leader.velocity.normalized()
+	var target: Vector2 = _follow_target_position()
+	var offset: Vector2 = target - global_position
+	if _follow_moving:
+		_follow_moving = offset.length() > follow_stop_distance
+	else:
+		_follow_moving = offset.length() > follow_resume_distance
+	if not _follow_moving:
+		if not velocity.is_zero_approx():
+			velocity = Vector2.ZERO
+			_refresh_idle_animation()
+		return
+	velocity = offset.normalized() * follow_move_speed
+	var frame_delta: float = maxf(delta, 0.001)
+	if velocity.length() > offset.length() / frame_delta:
+		velocity = offset / frame_delta
+	move_and_slide()
+	_update_facing_from_velocity(velocity)
+	_refresh_movement_animation()
+
+
+func _follow_target_position() -> Vector2:
+	if _follow_leader == null:
+		return global_position
+	var direction: Vector2 = _last_leader_direction.normalized()
+	if direction.is_zero_approx():
+		direction = Vector2.DOWN
+	var right: Vector2 = Vector2(-direction.y, direction.x)
+	match _follow_slot:
+		0:
+			return _follow_leader.global_position - direction * 32.0 - right * 20.0
+		1:
+			return _follow_leader.global_position - direction * 32.0 + right * 20.0
+		_:
+			return _follow_leader.global_position - direction * 52.0
 
 
 func set_staged_facing(direction: StringName) -> void:
@@ -447,11 +661,12 @@ func _finish_activity() -> void:
 func _cancel_activity(return_to_idle_pose: bool) -> void:
 	if _active_activity == null:
 		return
+	var cancelled_activity: NPCActivityDefinition = _active_activity
 	_active_activity = null
 	_activity_phase = &"idle"
 	_activity_frame_index = 0
 	_activity_timer = 0.0
-	_activity_cooldown_timer = _activity_wait_range(_active_activity.post_activity_cooldown_min, _active_activity.post_activity_cooldown_max, _active_activity.retrigger_min, _active_activity.retrigger_max)
+	_activity_cooldown_timer = _activity_wait_range(cancelled_activity.post_activity_cooldown_min, cancelled_activity.post_activity_cooldown_max, cancelled_activity.retrigger_min, cancelled_activity.retrigger_max)
 	ambient_motion_enabled = _activity_resume_ambient_motion
 	_activity_restart_pending = false
 	_activity_player_look_pending = false

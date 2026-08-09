@@ -2,7 +2,9 @@ extends Control
 
 signal chat_closed
 
-@export var chat_endpoint: String = "http://127.0.0.1:8000/chat"
+const PNEBackend = preload("res://scripts/api/pne_backend.gd")
+
+@export var chat_endpoint: String = ""
 @export_range(10.0, 180.0, 1.0) var request_timeout: float = 90.0
 @export_range(0.1, 5.0, 0.1) var retry_delay: float = 0.75
 
@@ -28,6 +30,8 @@ var _conversation_input_enabled: bool = true
 
 
 func _ready() -> void:
+	if chat_endpoint.strip_edges().is_empty():
+		chat_endpoint = PNEBackend.chat_url()
 	visible = false
 	http_request.timeout = request_timeout
 	health_request.timeout = 5.0

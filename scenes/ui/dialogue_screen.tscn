@@ -1,0 +1,311 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/api/dialogue_screen.gd" id="1_dialogue_screen"]
+
+[node name="DialogueScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+visible = false
+script = ExtResource("1_dialogue_screen")
+
+[node name="WorldDimmer" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0.0, 0.0, 0.0, 0.0)
+
+[node name="MainFrame" type="PanelContainer" parent="."]
+layout_mode = 0
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+mouse_filter = 1
+
+[node name="FrameMargin" type="MarginContainer" parent="MainFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 8
+
+[node name="RootVBox" type="VBoxContainer" parent="MainFrame/FrameMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+
+[node name="TopIdentityBar" type="HBoxContainer" parent="MainFrame/FrameMargin/RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+size_flags_stretch_ratio = 0.1
+custom_minimum_size = Vector2(0, 24)
+theme_override_constants/separation = 6
+
+[node name="SpeakerName" type="Label" parent="MainFrame/FrameMargin/RootVBox/TopIdentityBar"]
+layout_mode = 2
+text = "Astrid Halden"
+
+[node name="SpeakerRole" type="Label" parent="MainFrame/FrameMargin/RootVBox/TopIdentityBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Night Division Field Leader"
+text_overrun_behavior = 3
+clip_text = true
+
+[node name="RelationshipStatus" type="Label" parent="MainFrame/FrameMargin/RootVBox/TopIdentityBar"]
+layout_mode = 2
+text = "Trusted"
+
+[node name="RelationshipMeter" type="ProgressBar" parent="MainFrame/FrameMargin/RootVBox/TopIdentityBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(60, 10)
+show_percentage = false
+value = 70.0
+
+[node name="ConnectionBadge" type="Label" parent="MainFrame/FrameMargin/RootVBox/TopIdentityBar"]
+layout_mode = 2
+text = ""
+horizontal_alignment = 2
+visible = false
+
+[node name="BodyColumns" type="HBoxContainer" parent="MainFrame/FrameMargin/RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.9
+theme_override_constants/separation = 8
+
+[node name="PortraitPanel" type="PanelContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns"]
+layout_mode = 2
+custom_minimum_size = Vector2(116, 0)
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="PortraitMargin" type="MarginContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/PortraitPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="PortraitVBox" type="VBoxContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/PortraitPanel/PortraitMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="PortraitFrame" type="PanelContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/PortraitPanel/PortraitMargin/PortraitVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PortraitStack" type="Control" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/PortraitPanel/PortraitMargin/PortraitVBox/PortraitFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="PortraitPlaceholder" type="Label" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/PortraitPanel/PortraitMargin/PortraitVBox/PortraitFrame/PortraitStack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "NIGHT DIVISION"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+mouse_filter = 2
+
+[node name="ActorPortrait" type="TextureRect" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/PortraitPanel/PortraitMargin/PortraitVBox/PortraitFrame/PortraitStack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 0
+
+[node name="ConversationPanel" type="PanelContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.75
+
+[node name="InfoPanel" type="PanelContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 0)
+size_flags_vertical = 3
+visible = false
+
+[node name="InfoMargin" type="MarginContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/InfoPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="InfoVBox" type="VBoxContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/InfoPanel/InfoMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="InfoHeading" type="Label" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/InfoPanel/InfoMargin/InfoVBox"]
+layout_mode = 2
+text = "Metadata"
+
+[node name="MetadataText" type="RichTextLabel" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/InfoPanel/InfoMargin/InfoVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+mouse_filter = 0
+
+[node name="ConversationMargin" type="MarginContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 6
+
+[node name="ConversationVBox" type="VBoxContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 2
+
+[node name="DialogueScroll" type="ScrollContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin/ConversationVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 96)
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="ConversationLog" type="RichTextLabel" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin/ConversationVBox/DialogueScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+scroll_active = false
+fit_content = true
+autowrap_mode = 3
+mouse_filter = 0
+
+[node name="LowerConversation" type="VBoxContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin/ConversationVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 4
+
+[node name="Composer" type="HBoxContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin/ConversationVBox/LowerConversation"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_minimum_size = Vector2(0, 28)
+theme_override_constants/separation = 4
+
+[node name="MessageInput" type="LineEdit" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin/ConversationVBox/LowerConversation/Composer"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 28)
+theme_override_font_sizes/font_size = 14
+placeholder_text = "Say something…"
+
+[node name="SendButton" type="Button" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin/ConversationVBox/LowerConversation/Composer"]
+layout_mode = 2
+custom_minimum_size = Vector2(48, 28)
+text = "Send"
+
+[node name="CloseButton" type="Button" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin/ConversationVBox/LowerConversation/Composer"]
+layout_mode = 2
+custom_minimum_size = Vector2(48, 28)
+text = "Close"
+
+[node name="SuggestionChips" type="GridContainer" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin/ConversationVBox/LowerConversation"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+custom_minimum_size = Vector2(0, 39)
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 3
+columns = 2
+
+[node name="Reply1" type="Button" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin/ConversationVBox/LowerConversation/SuggestionChips"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "What gave me away?"
+
+[node name="Reply2" type="Button" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin/ConversationVBox/LowerConversation/SuggestionChips"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tell me about Night Division."
+
+[node name="Reply3" type="Button" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin/ConversationVBox/LowerConversation/SuggestionChips"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "I’ve had stranger first days."
+
+[node name="Reply4" type="Button" parent="MainFrame/FrameMargin/RootVBox/BodyColumns/ConversationPanel/ConversationMargin/ConversationVBox/LowerConversation/SuggestionChips"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "I’ll let you get back to work."
+
+[node name="FooterControls" type="Label" parent="MainFrame/FrameMargin/RootVBox"]
+layout_mode = 2
+visible = false
+text = "E Select    Arrow Keys Navigate    Esc Close"
+horizontal_alignment = 1
+
+[node name="StatusLine" type="Label" parent="MainFrame/FrameMargin/RootVBox"]
+layout_mode = 2
+visible = false
+text = ""
+horizontal_alignment = 1
