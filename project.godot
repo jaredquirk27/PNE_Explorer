@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-run/main_scene="res://worlds/headquarters/foyer/foyer.tscn"
+run/main_scene="res://scenes/tools/realms_character_creator_mvp_tests.tscn"
 config/features=PackedStringArray("4.7")
 config/pne_api_base_url="http://127.0.0.1:8000"
 config/comfyui_base_url="http://127.0.0.1:8188"

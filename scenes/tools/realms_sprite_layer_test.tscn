@@ -1,0 +1,78 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/tools/realms_sprite_layer_test.gd" id="1_test"]
+[ext_resource type="Texture2D" path="res://assets/actors/player/prototype/test/legs.png" id="2_legs"]
+[ext_resource type="Texture2D" path="res://assets/actors/player/prototype/test/torso.png" id="3_torso"]
+[ext_resource type="Texture2D" path="res://assets/actors/player/prototype/test/head.png" id="4_head"]
+
+[node name="RealmsSpriteLayerTest" type="Node2D"]
+script = ExtResource("1_test")
+
+[node name="Stacked" type="Node2D" parent="."]
+position = Vector2(256, 16)
+
+[node name="Legs" type="Sprite2D" parent="Stacked"]
+texture = ExtResource("2_legs")
+position = Vector2(0, 0)
+scale = Vector2(1, 1)
+centered = false
+z_index = 1
+
+[node name="Torso" type="Sprite2D" parent="Stacked"]
+texture = ExtResource("3_torso")
+position = Vector2(0, 0)
+scale = Vector2(1, 1)
+centered = false
+z_index = 2
+
+[node name="Head" type="Sprite2D" parent="Stacked"]
+texture = ExtResource("4_head")
+position = Vector2(0, 0)
+scale = Vector2(1, 1)
+centered = false
+z_index = 3
+
+[node name="Separated" type="Node2D" parent="."]
+position = Vector2(640, 16)
+
+[node name="Legs" type="Sprite2D" parent="Separated"]
+texture = ExtResource("2_legs")
+position = Vector2(0, 170)
+scale = Vector2(1, 1)
+centered = false
+z_index = 0
+
+[node name="Torso" type="Sprite2D" parent="Separated"]
+texture = ExtResource("3_torso")
+position = Vector2(0, 86)
+scale = Vector2(1, 1)
+centered = false
+z_index = 1
+
+[node name="Head" type="Sprite2D" parent="Separated"]
+texture = ExtResource("4_head")
+position = Vector2(0, 0)
+scale = Vector2(1, 1)
+centered = false
+z_index = 2
+
+[node name="HeadLabel" type="Label" parent="Separated"]
+offset_left = 0.0
+offset_top = -18.0
+offset_right = 72.0
+offset_bottom = 0.0
+text = "HEAD"
+
+[node name="TorsoLabel" type="Label" parent="Separated"]
+offset_left = 0.0
+offset_top = 68.0
+offset_right = 72.0
+offset_bottom = 86.0
+text = "TORSO"
+
+[node name="LegsLabel" type="Label" parent="Separated"]
+offset_left = 0.0
+offset_top = 154.0
+offset_right = 72.0
+offset_bottom = 172.0
+text = "LEGS"

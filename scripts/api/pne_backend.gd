@@ -20,3 +20,11 @@ static func chat_url() -> String:
 
 static func campaign_action_url() -> String:
 	return "%s/campaign/action" % base_url()
+
+
+static func realms_onboarding_url() -> String:
+	return "%s/campaign/realms/active/onboarding" % base_url()
+
+
+static func realms_onboarding_turn_url() -> String:
+	return "%s/campaign/realms/active/onboarding/turn" % base_url()

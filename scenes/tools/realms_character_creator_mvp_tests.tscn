@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://gl8isbrjtmuh"]
+
+[ext_resource type="Script" uid="uid://h6jqm4cus8k5" path="res://scripts/tests/realms_character_creator_mvp_tests.gd" id="1_tests"]
+[ext_resource type="PackedScene" path="res://scenes/realms_character_creator_mvp.tscn" id="2_eti1r"]
+[ext_resource type="PackedScene" path="res://scenes/realms_character_creator_preview.tscn" id="3_m0vo5"]
+
+[node name="RealmsCharacterCreatorMvpTests" type="Node" unique_id=278890292]
+script = ExtResource("1_tests")
+
+[node name="RealmsCharacterCreatorMvp" parent="." unique_id=1760313386 instance=ExtResource("2_eti1r")]
+
+[node name="RealmsCharacterCreatorPreview" parent="RealmsCharacterCreatorMvp" unique_id=173901666 instance=ExtResource("3_m0vo5")]

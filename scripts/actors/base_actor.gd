@@ -1,11 +1,14 @@
 extends CharacterBody2D
 
 const DirectionalVisualHelper = preload("res://scripts/actors/directional_visual_helper.gd")
+const RealmsAppearanceRig = preload("res://scripts/characters/realms_appearance_rig.gd")
+const PNEBackend = preload("res://scripts/api/pne_backend.gd")
 
 @export var actor_id: StringName
 @export var actor_display_name: String = "Actor"
 @export var move_speed: float = 160.0
 @export var sprite_frames: SpriteFrames
+@export var appearance_recipe: Dictionary = {}
 @export var idle_sheet: Texture2D
 @export var walk_sheet: Texture2D
 @export_file("*.png") var idle_texture_path: String
@@ -31,12 +34,18 @@ const DirectionalVisualHelper = preload("res://scripts/actors/directional_visual
 
 var _last_facing: StringName = &"down"
 var _lpc_visual_ready: bool = false
+var _appearance_rig: Node = null
+var _appearance_loader: HTTPRequest = null
 
 
 func _ready() -> void:
 	if actor_id == &"player":
 		add_to_group(&"player")
 	_last_facing = _canonical_facing(StringName(initial_facing))
+	if actor_id == &"player":
+		_begin_realms_appearance_load()
+	if not appearance_recipe.is_empty():
+		_apply_realms_appearance_recipe(appearance_recipe)
 	animated_sprite.visible = false
 	var directional_frames := _build_directional_frames()
 	if directional_frames != null:
@@ -75,6 +84,63 @@ func _ready() -> void:
 	print("[LPC] %s playing idle_%s" % [actor_display_name, _last_facing])
 
 
+func _begin_realms_appearance_load() -> void:
+	if _appearance_loader != null:
+		return
+	_appearance_loader = HTTPRequest.new()
+	_appearance_loader.timeout = 15.0
+	add_child(_appearance_loader)
+	_appearance_loader.request_completed.connect(_on_realms_appearance_loaded)
+	var error := _appearance_loader.request(PNEBackend.realms_onboarding_url())
+	if error != OK:
+		push_warning("REALMS appearance profile request failed to start: %s" % error_string(error))
+		_appearance_loader.queue_free()
+		_appearance_loader = null
+
+
+func _on_realms_appearance_loaded(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	if _appearance_loader != null:
+		_appearance_loader.queue_free()
+		_appearance_loader = null
+	if result != HTTPRequest.RESULT_SUCCESS or response_code < 200 or response_code >= 300:
+		push_warning("REALMS appearance profile request failed: HTTP %d" % response_code)
+		return
+	var parsed: Variant = JSON.parse_string(body.get_string_from_utf8())
+	if not (parsed is Dictionary):
+		push_warning("REALMS appearance profile response was invalid JSON.")
+		return
+	var player_profile := dict_get_dict(parsed, "player_profile")
+	var recipe_value: Variant = player_profile.get("appearance_recipe") if player_profile is Dictionary else null
+	if recipe_value is Dictionary:
+		var recipe: Dictionary = recipe_value
+		if not recipe.is_empty():
+			_apply_realms_appearance_recipe(recipe)
+		else:
+			push_warning("REALMS player profile has no valid appearance_recipe; keeping fallback appearance.")
+	else:
+		push_warning("REALMS player profile has no valid appearance_recipe; keeping fallback appearance.")
+
+
+func dict_get_dict(source: Dictionary, key: String) -> Dictionary:
+	var value: Variant = source.get(key, {})
+	return value if value is Dictionary else {}
+
+
+func set_appearance_recipe(recipe: Dictionary) -> void:
+	_apply_realms_appearance_recipe(recipe)
+
+
+func _apply_realms_appearance_recipe(recipe: Dictionary) -> void:
+	var normalized := RealmsAppearanceRecipe.normalize(recipe)
+	if _appearance_rig == null:
+		_appearance_rig = RealmsAppearanceRig.new()
+		visual_root.add_child(_appearance_rig)
+	_appearance_rig.call(&"set_appearance_recipe", normalized)
+	_appearance_rig.call(&"set_motion_state", &"idle", _last_facing, 0)
+	animated_sprite.visible = false
+	_lpc_visual_ready = true
+
+
 func _load_lpc_textures() -> void:
 	idle_sheet = _load_lpc_texture(idle_sheet, idle_texture_path, "idle")
 	walk_sheet = _load_lpc_texture(walk_sheet, walk_texture_path, "walk")
@@ -87,7 +153,7 @@ func _load_lpc_texture(current: Texture2D, resource_path: String, animation_kind
 	if resource_path.is_empty() or not ResourceLoader.exists(resource_path, "Texture2D"):
 		push_error("[LPC] %s failed to load %s texture: %s" % [actor_display_name, animation_kind, resource_path])
 		return null
-	var loaded := load(resource_path) as Texture2D
+	var loaded: Texture2D = load(resource_path) as Texture2D
 	if loaded == null:
 		push_error("[LPC] %s failed to load %s texture: %s" % [actor_display_name, animation_kind, resource_path])
 		return null
@@ -198,11 +264,14 @@ func _add_lpc_animation(
 
 
 func _process(_delta: float) -> void:
+	if not velocity.is_zero_approx():
+		_last_facing = _get_facing_direction(velocity)
+	if _appearance_rig != null:
+		var motion := &"walk" if not velocity.is_zero_approx() else &"idle"
+		_appearance_rig.call(&"set_motion_state", motion, _last_facing, 0 if motion == &"idle" else int(Time.get_ticks_msec() / 180) % 2)
 	if velocity.is_zero_approx():
 		_show_idle_frame()
 		return
-
-	_last_facing = _get_facing_direction(velocity)
 	_show_movement_frame()
 
 
